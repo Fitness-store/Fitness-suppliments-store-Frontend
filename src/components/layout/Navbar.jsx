@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', href: '#', type: 'scroll' },
-    { name: 'Products', href: '#products-section', type: 'scroll' },
+    { name: 'Products', href: '/products', type: 'page' },
     { name: 'About', href: '/about', type: 'page' },
     { name: 'Contact', href: '#footer', type: 'scroll' },
   ];

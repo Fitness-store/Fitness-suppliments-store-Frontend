@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,19 +17,28 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Products', href: '#products-section' },
-    { name: 'About', href: '#benefits-section' },
-    { name: 'Contact', href: '#footer' },
+    { name: 'Home', href: '#', type: 'scroll' },
+    { name: 'Products', href: '#products-section', type: 'scroll' },
+    { name: 'About', href: '/about', type: 'page' },
+    { name: 'Contact', href: '#footer', type: 'scroll' },
   ];
 
-  const scrollToSection = (href) => {
-    if (href === '#') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleNavigation = (link) => {
+    if (link.type === 'page') {
+      navigate(link.href);
     } else {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      // Scroll type - only works on home page
+      if (location.pathname !== '/') {
+        navigate('/' + link.href);
+      } else {
+        if (link.href === '#') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const element = document.querySelector(link.href);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
       }
     }
     setIsMobileMenuOpen(false);
@@ -55,7 +67,7 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => scrollToSection(link.href)}
+                onClick={() => handleNavigation(link)}
                 className="text-gray-300 hover:text-white font-medium transition-colors"
               >
                 {link.name}
@@ -95,7 +107,7 @@ const Navbar = () => {
               {navLinks.map((link) => (
                 <button
                   key={link.name}
-                  onClick={() => scrollToSection(link.href)}
+                  onClick={() => handleNavigation(link)}
                   className="text-gray-300 hover:text-white font-medium transition-colors text-left"
                 >
                   {link.name}

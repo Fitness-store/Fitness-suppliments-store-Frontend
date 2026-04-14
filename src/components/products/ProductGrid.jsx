@@ -43,7 +43,7 @@ const ProductGrid = ({ products, loading, error, onRetry }) => {
               {error}
             </p>
             <button
-              onClick={onRetry}
+              onClick={()=>onRetry()}
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors"
               aria-label="Retry loading products"
             >
@@ -72,7 +72,7 @@ const ProductGrid = ({ products, loading, error, onRetry }) => {
               Our inventory is currently empty. Check back soon for premium supplements!
             </p>
             <button
-              onClick={onRetry}
+              onClick={()=>onRetry()}
               className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors"
               aria-label="Refresh products"
             >

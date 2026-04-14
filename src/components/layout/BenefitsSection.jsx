@@ -60,10 +60,10 @@ const BenefitsSection = () => {
             Why Choose Us
           </span>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            The <span className="text-gradient">FitStore</span> Advantage
+            The <span className="text-gradient">IronCore</span> Advantage
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            We're committed to providing you with the best supplements and an unmatched shopping experience
+            Trusted by 100,000+ athletes who choose IronCore for their fitness journey and an unmatched shopping experience
           </p>
         </div>
 

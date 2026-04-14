@@ -95,7 +95,7 @@ const ProductsPage = () => {
       result = result.filter(p =>
         p.name?.toLowerCase().includes(query) ||
         p.brand?.toLowerCase().includes(query) ||
-        p.description?.toLowerCase().includes(query)
+        (p.description?.toLowerCase() || '').includes(query)
       );
     }
 

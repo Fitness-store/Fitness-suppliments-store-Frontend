@@ -19,16 +19,9 @@ const LandingPage = () => {
     try {
       const response = await fetchProducts(showInStockOnly);
       
-      console.log('API Response:', response);
-      console.log('Response success:', response?.success);
-      console.log('Response products:', response?.products);
-      console.log('Is products array?', Array.isArray(response?.products));
-      console.log('Products length:', response?.products?.length);
-      
       if (response?.success && Array.isArray(response?.products)) {
         setProducts(response.products);
       } else {
-        console.log('Setting empty products - success or products issue');
         setProducts([]);
       }
     } catch (err) {

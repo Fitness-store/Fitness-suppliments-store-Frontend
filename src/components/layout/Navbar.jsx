@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,19 +17,23 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Products', href: '#products-section' },
-    { name: 'About', href: '#benefits-section' },
-    { name: 'Contact', href: '#footer' },
+    { name: 'Home', href: '#', path: '/' },
+    { name: 'Products', href: '#products-section', path: '/' },
+    { name: 'About', href: '#benefits-section', path: '/' },
+    { name: 'Contact', href: '#footer', path: '/' },
   ];
 
-  const scrollToSection = (href) => {
-    if (href === '#') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleNavigation = (link) => {
+    if (location.pathname !== link.path) {
+      navigate(link.path + link.href);
     } else {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      if (link.href === '#') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const element = document.querySelector(link.href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
     setIsMobileMenuOpen(false);
@@ -55,7 +62,7 @@ const Navbar = () => {
             {navLinks.map((link) => (
               <button
                 key={link.name}
-                onClick={() => scrollToSection(link.href)}
+                onClick={() => handleNavigation(link)}
                 className="text-gray-300 hover:text-white font-medium transition-colors"
               >
                 {link.name}
@@ -70,9 +77,10 @@ const Navbar = () => {
             </button>
             <button className="p-2 text-gray-300 hover:text-white transition-colors relative">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+              {/* Cart count badge - hidden until cart state is implemented */}
+              {/* <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
                 0
-              </span>
+              </span> */}
             </button>
             <button className="p-2 text-gray-300 hover:text-white transition-colors">
               <User className="w-5 h-5" />
@@ -95,7 +103,7 @@ const Navbar = () => {
               {navLinks.map((link) => (
                 <button
                   key={link.name}
-                  onClick={() => scrollToSection(link.href)}
+                  onClick={() => handleNavigation(link)}
                   className="text-gray-300 hover:text-white font-medium transition-colors text-left"
                 >
                   {link.name}
@@ -107,9 +115,10 @@ const Navbar = () => {
                 </button>
                 <button className="p-2 text-gray-300 hover:text-white transition-colors relative">
                   <ShoppingCart className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {/* Cart count badge - hidden until cart state is implemented */}
+                  {/* <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
                     0
-                  </span>
+                  </span> */}
                 </button>
                 <button className="p-2 text-gray-300 hover:text-white transition-colors">
                   <User className="w-5 h-5" />

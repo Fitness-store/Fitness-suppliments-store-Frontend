@@ -4,12 +4,13 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ProductCard from '../components/products/ProductCard';
 import ProductCardSkeleton from '../components/products/ProductCardSkeleton';
-import { fetchProducts, fetchProductsByCategoryId } from '../services/api';
+import { fetchProducts, fetchProductsByCategoryId, fetchCategories } from '../services/api';
 import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 
 const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([{ id: '', name: 'All Categories' }]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,16 +20,18 @@ const ProductsPage = () => {
   const [sortBy, setSortBy] = useState('featured');
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = [
-    { id: '', name: 'All Categories' },
-    { id: 'protein', name: 'Protein' },
-    { id: 'pre-workout', name: 'Pre-Workout' },
-    { id: 'bcaa', name: 'BCAA' },
-    { id: 'creatine', name: 'Creatine' },
-    { id: 'vitamins', name: 'Vitamins' },
-  ];
-
   const brands = ['Optimum Nutrition', 'Dymatize', 'Muscletech', 'BSN', 'Cellucor'];
+
+  const loadCategories = async () => {
+    try {
+      const response = await fetchCategories();
+      if (response?.success && Array.isArray(response?.categories)) {
+        setCategories([{ id: '', name: 'All Categories' }, ...response.categories]);
+      }
+    } catch (err) {
+      console.error('Failed to load categories:', err);
+    }
+  };
 
   const loadProducts = async () => {
     setLoading(true);

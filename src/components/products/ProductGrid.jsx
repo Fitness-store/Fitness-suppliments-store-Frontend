@@ -6,7 +6,6 @@ import { AlertCircle, RefreshCw, Package, ArrowRight } from 'lucide-react';
 
 const ProductGrid = ({ products, loading, error, onRetry }) => {
   const navigate = useNavigate();
-
   // Loading State
   if (loading) {
     return (
@@ -135,7 +134,7 @@ const ProductGrid = ({ products, loading, error, onRetry }) => {
 
         {/* View All Button */}
         <div className="text-center mt-12">
-          <button
+          <button 
             onClick={() => navigate('/products')}
             className="inline-flex items-center gap-2 px-8 py-4 bg-navy-900 hover:bg-navy-800 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >

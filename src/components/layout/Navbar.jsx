@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,22 +18,27 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#', path: '/' },
-    { name: 'Products', href: '#products-section', path: '/' },
-    { name: 'About', href: '#benefits-section', path: '/' },
-    { name: 'Contact', href: '#footer', path: '/' },
+    { name: 'Home', href: '#', type: 'scroll' },
+    { name: 'Products', href: '#products-section', type: 'scroll' },
+    { name: 'About', href: '/about', type: 'page' },
+    { name: 'Contact', href: '#footer', type: 'scroll' },
   ];
 
   const handleNavigation = (link) => {
-    if (location.pathname !== link.path) {
-      navigate(link.path + link.href);
+    if (link.type === 'page') {
+      navigate(link.href);
     } else {
-      if (link.href === '#') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Scroll type - only works on home page
+      if (location.pathname !== '/') {
+        navigate('/' + link.href);
       } else {
-        const element = document.querySelector(link.href);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+        if (link.href === '#') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const element = document.querySelector(link.href);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
         }
       }
     }

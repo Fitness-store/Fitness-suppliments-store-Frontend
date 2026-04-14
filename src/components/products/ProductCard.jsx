@@ -8,7 +8,7 @@ const ProductCard = ({ product }) => {
   if (!product) return null;
 
   const handleCardClick = (e) => {
-    // Don't navigate if clicking the add to cart button
+
     if (e.target.closest('button')) return;
     if (!product?.productId) return;
     navigate(`/product/${product.productId}`);

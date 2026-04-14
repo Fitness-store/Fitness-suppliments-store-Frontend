@@ -51,34 +51,14 @@ export const fetchProductById = async (id) => {
   }
 };
 
-export const fetchProductsByCategoryId = async (categoryId, displayInStock = true) => {
+export const fetchProductsByCategoryId = async (categoryId) => {
   try {
-    const response = await api.get(`/fs/product/category/${categoryId}`, {
-      params: { displayInStock: displayInStock.toString() }
+    const response = await api.get('/fs/product/all', {
+      params: { categoryId }
     });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Failed to fetch products by category');
-  }
-};
-
-export const fetchFilteredProducts = async (filters = {}) => {
-  try {
-    const params = new URLSearchParams();
-    if (filters.categoryId) params.append('categoryId', filters.categoryId);
-    if (filters.brands && filters.brands.length > 0) {
-      filters.brands.forEach(brand => params.append('brands', brand));
-    }
-    if (filters.minPrice !== undefined && filters.minPrice !== '') params.append('minPrice', filters.minPrice);
-    if (filters.maxPrice !== undefined && filters.maxPrice !== '') params.append('maxPrice', filters.maxPrice);
-    if (filters.displayInStock !== undefined) params.append('displayInStock', filters.displayInStock.toString());
-    if (filters.sortBy) params.append('sortBy', filters.sortBy);
-    if (filters.searchQuery) params.append('searchQuery', filters.searchQuery);
-
-    const response = await api.get('/fs/product/filter', { params });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch filtered products');
   }
 };
 
@@ -92,6 +72,15 @@ export const addProduct = async (productData) => {
 };
 
 // Category APIs
+export const fetchCategories = async () => {
+  try {
+    const response = await api.get('/fs/category/all');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch categories');
+  }
+};
+
 export const addCategory = async (categoryData) => {
   try {
     const response = await api.post('/fs/category/add', categoryData);

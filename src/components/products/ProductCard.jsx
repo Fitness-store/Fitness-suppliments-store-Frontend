@@ -1,8 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Star, Check } from 'lucide-react';
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  
   if (!product) return null;
+
+  const handleCardClick = (e) => {
+    if (e.target.closest('button')) return;
+    if (!product?.productId) return;
+    navigate(`/product/${product.productId}`);
+  };
 
   const { 
     productId, 
@@ -24,7 +33,10 @@ const ProductCard = ({ product }) => {
   const hasStock = stock > 0;
 
   return (
-    <article className="product-card group h-full flex flex-col">
+    <article 
+      className="product-card group h-full flex flex-col cursor-pointer"
+      onClick={handleCardClick}
+    >
       {/* Image Container */}
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
         {imageUrl ? (

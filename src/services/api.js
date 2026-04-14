@@ -51,6 +51,17 @@ export const fetchProductById = async (id) => {
   }
 };
 
+export const fetchProductsByCategoryId = async (categoryId) => {
+  try {
+    const response = await api.get('/fs/product/all', {
+      params: { categoryId }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch products by category');
+  }
+};
+
 export const addProduct = async (productData) => {
   try {
     const response = await api.post('/fs/product/add', productData);
@@ -61,6 +72,15 @@ export const addProduct = async (productData) => {
 };
 
 // Category APIs
+export const fetchCategories = async () => {
+  try {
+    const response = await api.get('/fs/category/all');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch categories');
+  }
+};
+
 export const addCategory = async (categoryData) => {
   try {
     const response = await api.post('/fs/category/add', categoryData);

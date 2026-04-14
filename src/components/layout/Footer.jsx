@@ -39,7 +39,7 @@ const Footer = () => {
               <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
                 <Dumbbell className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold">FitStore</span>
+              <span className="text-2xl font-bold">IronCore</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-sm">
               Your trusted partner in fitness. Premium supplements, expert advice, and unmatched quality since 2020.
@@ -49,7 +49,7 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-gray-400">
                 <Mail className="w-5 h-5" />
-                <span>support@fitstore.com</span>
+                <span>support@ironcore.com</span>
               </div>
               <div className="flex items-center gap-3 text-gray-400">
                 <Phone className="w-5 h-5" />
@@ -111,7 +111,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © {currentYear} FitStore. All rights reserved.
+              © {currentYear} IronCore. All rights reserved.
             </p>
             
             {/* Social Links */}

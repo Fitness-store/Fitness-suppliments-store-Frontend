@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from '../components/layout/Navbar';
 import HeroSection from '../components/layout/HeroSection';
 import ProductGrid from '../components/products/ProductGrid';
 import BenefitsSection from '../components/layout/BenefitsSection';
@@ -18,9 +19,16 @@ const LandingPage = () => {
     try {
       const response = await fetchProducts(showInStockOnly);
       
-      if (response.success && response.data) {
-        setProducts(response.data);
+      console.log('API Response:', response);
+      console.log('Response success:', response?.success);
+      console.log('Response products:', response?.products);
+      console.log('Is products array?', Array.isArray(response?.products));
+      console.log('Products length:', response?.products?.length);
+      
+      if (response?.success && Array.isArray(response?.products)) {
+        setProducts(response.products);
       } else {
+        console.log('Setting empty products - success or products issue');
         setProducts([]);
       }
     } catch (err) {
@@ -37,6 +45,9 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <Navbar />
+      
       {/* Hero Section */}
       <HeroSection />
       
@@ -49,13 +60,17 @@ const LandingPage = () => {
       />
       
       {/* Benefits Section */}
-      <BenefitsSection />
+      <div id="benefits-section">
+        <BenefitsSection />
+      </div>
       
       {/* CTA Banner */}
       <CTABanner />
       
       {/* Footer */}
-      <Footer />
+      <div id="footer">
+        <Footer />
+      </div>
     </div>
   );
 };

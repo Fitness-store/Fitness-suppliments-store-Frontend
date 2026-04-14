@@ -8,6 +8,7 @@ const ProductCard = ({ product }) => {
   if (!product) return null;
 
   const handleCardClick = (e) => {
+
     if (e.target.closest('button')) return;
     if (!product?.productId) return;
     navigate(`/product/${product.productId}`);

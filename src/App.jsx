@@ -3,7 +3,6 @@ import LandingPage from './pages/LandingPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import AboutPage from './pages/AboutPage';
-
 function App() {
   return (
     <Router>

@@ -37,6 +37,7 @@ const ProductDetailsPage = () => {
     }
   }, [id]);
 
+
   const handleQuantityChange = (delta) => {
     setQuantity(prev => Math.max(1, Math.min(prev + delta, product?.stock || 10)));
   };
@@ -45,7 +46,6 @@ const ProductDetailsPage = () => {
     if (!product?.mrp || !product?.finalPrice) return 0;
     return Math.round(((product.mrp - product.finalPrice) / product.mrp) * 100);
   };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">

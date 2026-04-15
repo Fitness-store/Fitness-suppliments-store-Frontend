@@ -219,4 +219,40 @@ export const placeOrder = async (payload) => {
   }
 };
 
+export const addCartItem = async (payload) => {
+  try {
+    const response = await api.post('/fs/cart/items', payload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to add cart item');
+  }
+};
+
+export const fetchCart = async () => {
+  try {
+    const response = await api.get('/fs/cart');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch cart');
+  }
+};
+
+export const updateCartItemQuantity = async (cartItemId, payload) => {
+  try {
+    const response = await api.put(`/fs/cart/items/${cartItemId}`, payload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to update cart item');
+  }
+};
+
+export const removeCartItem = async (cartItemId) => {
+  try {
+    const response = await api.delete(`/fs/cart/items/${cartItemId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to remove cart item');
+  }
+};
+
 export default api;

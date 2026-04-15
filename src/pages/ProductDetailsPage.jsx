@@ -5,11 +5,13 @@ import Footer from '../components/layout/Footer';
 import { fetchProductById, placeOrder } from '../services/api';
 import { Star, ShoppingCart, Check, Minus, Plus, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
 import { useAuth } from '../context/useAuth';
+import { useCart } from '../context/useCart';
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,6 +19,7 @@ const ProductDetailsPage = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderMessage, setOrderMessage] = useState('');
+  const [cartMessage, setCartMessage] = useState('');
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -69,6 +72,11 @@ const ProductDetailsPage = () => {
     } finally {
       setOrderLoading(false);
     }
+  };
+
+  const handleAddToCart = () => {
+    const result = addToCart(product, quantity);
+    setCartMessage(result.message);
   };
   if (loading) {
     return (
@@ -208,12 +216,12 @@ const ProductDetailsPage = () => {
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-3xl font-bold text-gray-900">
-                  â‚¹{product.finalPrice?.toLocaleString()}
+                  Rs {product.finalPrice?.toLocaleString()}
                 </span>
                 {product.mrp > product.finalPrice && (
                   <>
                     <span className="text-xl text-gray-400 line-through">
-                      â‚¹{product.mrp?.toLocaleString()}
+                      Rs {product.mrp?.toLocaleString()}
                     </span>
                     <span className="text-green-600 font-medium">{discount}% off</span>
                   </>
@@ -250,23 +258,39 @@ const ProductDetailsPage = () => {
                 </div>
               </div>
 
-              {/* Add to Cart Button */}
-              <button
-                disabled={!hasStock}
-                onClick={handleOrderNow}
-                className={`w-full flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 mb-6 ${
-                  hasStock
-                    ? 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg hover:shadow-xl'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {hasStock ? (orderLoading ? 'Placing Order...' : 'Order Now') : 'Out of Stock'}
-              </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                <button
+                  disabled={!hasStock}
+                  onClick={handleAddToCart}
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                    hasStock
+                      ? 'bg-navy-900 hover:bg-navy-800 text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {hasStock ? 'Add To Cart' : 'Out of Stock'}
+                </button>
+                <button
+                  disabled={!hasStock}
+                  onClick={handleOrderNow}
+                  className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
+                    hasStock
+                      ? 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg hover:shadow-xl'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {hasStock ? (orderLoading ? 'Placing Order...' : 'Order Now') : 'Out of Stock'}
+                </button>
+              </div>
               {orderMessage && (
                 <p className={`text-sm mb-4 ${orderMessage.toLowerCase().includes('fail') ? 'text-red-600' : 'text-green-700'}`}>
                   {orderMessage}
                 </p>
+              )}
+              {cartMessage && (
+                <p className="text-sm mb-4 text-gray-600">{cartMessage}</p>
               )}
 
               {/* Trust Badges */}

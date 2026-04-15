@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
+import { useCart } from '../../context/useCart';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +11,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, logout } = useAuth();
+  const { cartCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +24,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', href: '#', type: 'scroll' },
     { name: 'Products', href: '/products', type: 'page' },
+    { name: 'Cart', href: '/cart', type: 'page' },
     { name: 'About', href: '/about', type: 'page' },
     { name: 'Contact', href: '#footer', type: 'scroll' },
   ];
@@ -88,12 +91,16 @@ const Navbar = () => {
             <button className="p-2 text-gray-300 hover:text-white transition-colors">
               <Search className="w-5 h-5" />
             </button>
-            <button className="p-2 text-gray-300 hover:text-white transition-colors relative">
+            <button
+              onClick={() => navigate('/cart')}
+              className="p-2 text-gray-300 hover:text-white transition-colors relative"
+            >
               <ShoppingCart className="w-5 h-5" />
-              {/* Cart count badge - hidden until cart state is implemented */}
-              {/* <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
-                0
-              </span> */}
+              {cartCount > 0 && !isAuthenticated ? (
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              ) : null}
             </button>
             <button className="p-2 text-gray-300 hover:text-white transition-colors">
               <User className="w-5 h-5" />
@@ -141,12 +148,16 @@ const Navbar = () => {
                 <button className="p-2 text-gray-300 hover:text-white transition-colors">
                   <Search className="w-5 h-5" />
                 </button>
-                <button className="p-2 text-gray-300 hover:text-white transition-colors relative">
+                <button
+                  onClick={() => navigate('/cart')}
+                  className="p-2 text-gray-300 hover:text-white transition-colors relative"
+                >
                   <ShoppingCart className="w-5 h-5" />
-                  {/* Cart count badge - hidden until cart state is implemented */}
-                  {/* <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
-                    0
-                  </span> */}
+                  {cartCount > 0 && !isAuthenticated ? (
+                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  ) : null}
                 </button>
                 <button className="p-2 text-gray-300 hover:text-white transition-colors">
                   <User className="w-5 h-5" />

@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Star, Check } from 'lucide-react';
+import { useCart } from '../../context/useCart';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const [cartMessage, setCartMessage] = useState('');
   
   if (!product) return null;
 
@@ -31,6 +34,12 @@ const ProductCard = ({ product }) => {
 
   const discount = mrp && finalPrice ? Math.round(((mrp - finalPrice) / mrp) * 100) : 0;
   const hasStock = stock > 0;
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    const result = addToCart(product, 1);
+    setCartMessage(result.message);
+  };
 
   return (
     <article 
@@ -78,6 +87,7 @@ const ProductCard = ({ product }) => {
         {/* Quick Add Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <button 
+            onClick={handleAddToCart}
             className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-colors"
             aria-label={`Add ${name} to cart`}
             disabled={!hasStock}
@@ -135,11 +145,11 @@ const ProductCard = ({ product }) => {
           <div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-bold text-gray-900">
-                ₹{finalPrice?.toLocaleString() || 'N/A'}
+                Rs {finalPrice?.toLocaleString() || 'N/A'}
               </span>
               {mrp > finalPrice && (
                 <span className="text-sm text-gray-400 line-through">
-                  ₹{mrp?.toLocaleString()}
+                  Rs {mrp?.toLocaleString()}
                 </span>
               )}
             </div>
@@ -153,6 +163,9 @@ const ProductCard = ({ product }) => {
             <span>{hasStock ? `In Stock (${stock})` : 'Out of Stock'}</span>
           </div>
         </div>
+        {cartMessage && (
+          <p className="text-xs text-gray-500 mt-2">{cartMessage}</p>
+        )}
       </div>
     </article>
   );

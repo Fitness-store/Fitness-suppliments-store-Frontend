@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package, LogOut } from 'lucide-react';
+import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { useCart } from '../../context/useCart';
 
@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, logout, currentUser } = useAuth();
+  const { isAuthenticated, currentUser } = useAuth();
   const { cartCount } = useCart();
 
   // Close dropdown when clicking outside
@@ -60,11 +60,6 @@ const Navbar = () => {
       }
     }
     setIsMobileMenuOpen(false);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
   };
 
   return (
@@ -143,15 +138,6 @@ const Navbar = () => {
                       <User className="w-4 h-4" />
                       Profile
                     </button>
-                    <div className="border-t border-gray-100 mt-1 pt-1">
-                      <button
-                        onClick={() => { handleLogout(); setIsProfileDropdownOpen(false); }}
-                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 flex items-center gap-2"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Logout
-                      </button>
-                    </div>
                   </div>
                 )}
               </div>
@@ -201,12 +187,6 @@ const Navbar = () => {
                     className="text-gray-300 hover:text-white font-medium transition-colors text-left"
                   >
                     Profile
-                  </button>
-                  <button
-                    onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
-                    className="text-red-400 hover:text-red-300 font-medium transition-colors text-left"
-                  >
-                    Logout
                   </button>
                 </>
               )}

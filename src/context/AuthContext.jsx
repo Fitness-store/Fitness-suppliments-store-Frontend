@@ -74,9 +74,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let mounted = true;
     const boot = async () => {
-      const refreshed = await refreshSession();
-      if (refreshed) {
-        await loadMe();
+      const token = localStorage.getItem('fitness_store_token');
+      if (token) {
+        try {
+          // Try to load user directly with existing token first
+          await loadMe();
+        } catch {
+          // If direct load fails, try to refresh the token
+          const refreshed = await refreshSession();
+          if (!refreshed) {
+            clearAccessToken();
+            setCurrentUser(null);
+            setIsAuthenticated(false);
+          }
+        }
       }
       if (mounted) {
         setAuthLoading(false);

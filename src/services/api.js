@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://fitness-supplements-store.onrender.com';
-let accessToken = null;
+const TOKEN_KEY = 'fitness_store_token';
+let accessToken = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
 let refreshPromise = null;
 
 const api = axios.create({
@@ -15,12 +16,22 @@ const api = axios.create({
 
 export const setAccessToken = (token) => {
   accessToken = token || null;
+  if (typeof window !== 'undefined') {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  }
 };
 
 export const getAccessToken = () => accessToken;
 
 export const clearAccessToken = () => {
   accessToken = null;
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(TOKEN_KEY);
+  }
 };
 
 const isAuthRefreshPath = (url = '') => url.includes('/fs/auth/refresh');

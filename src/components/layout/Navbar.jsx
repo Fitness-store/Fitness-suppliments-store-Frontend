@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
+import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/useAuth';
 import { useCart } from '../../context/useCart';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, currentUser } = useAuth();
   const { cartCount } = useCart();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.profile-dropdown')) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,17 +114,49 @@ const Navbar = () => {
                 </span>
               ) : null}
             </button>
-            <button className="p-2 text-gray-300 hover:text-white transition-colors">
-              <User className="w-5 h-5" />
-            </button>
-            {isAuthenticated ? (
-              <button
-                onClick={handleLogout}
-                className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
-              >
-                Logout
-              </button>
-            ) : (
+            {isAuthenticated && (
+              <div className="profile-dropdown relative">
+                <button 
+                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  className="flex items-center gap-1 p-2 text-gray-300 hover:text-white transition-colors"
+                >
+                  <User className="w-5 h-5" />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {isProfileDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{currentUser?.fullName || 'User'}</p>
+                      <p className="text-xs text-gray-500">{currentUser?.email || ''}</p>
+                    </div>
+                    <button
+                      onClick={() => { navigate('/orders'); setIsProfileDropdownOpen(false); }}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <Package className="w-4 h-4" />
+                      My Orders
+                    </button>
+                    <button
+                      onClick={() => { navigate('/profile'); setIsProfileDropdownOpen(false); }}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </button>
+                    <div className="border-t border-gray-100 mt-1 pt-1">
+                      <button
+                        onClick={() => { handleLogout(); setIsProfileDropdownOpen(false); }}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50 flex items-center gap-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {!isAuthenticated && (
               <button
                 onClick={() => navigate('/login')}
                 className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
@@ -144,40 +188,52 @@ const Navbar = () => {
                   {link.name}
                 </button>
               ))}
-              <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
-                <button className="p-2 text-gray-300 hover:text-white transition-colors">
-                  <Search className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => navigate('/cart')}
-                  className="p-2 text-gray-300 hover:text-white transition-colors relative"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  {cartCount > 0 && !isAuthenticated ? (
-                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
-                      {cartCount}
-                    </span>
-                  ) : null}
-                </button>
-                <button className="p-2 text-gray-300 hover:text-white transition-colors">
-                  <User className="w-5 h-5" />
-                </button>
-                {isAuthenticated ? (
+              {isAuthenticated && (
+                <>
                   <button
-                    onClick={handleLogout}
-                    className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                    onClick={() => { navigate('/orders'); setIsMobileMenuOpen(false); }}
+                    className="text-gray-300 hover:text-white font-medium transition-colors text-left"
+                  >
+                    My Orders
+                  </button>
+                  <button
+                    onClick={() => { navigate('/profile'); setIsMobileMenuOpen(false); }}
+                    className="text-gray-300 hover:text-white font-medium transition-colors text-left"
+                  >
+                    Profile
+                  </button>
+                  <button
+                    onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                    className="text-red-400 hover:text-red-300 font-medium transition-colors text-left"
                   >
                     Logout
                   </button>
-                ) : (
+                </>
+              )}
+              {!isAuthenticated && (
+                <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+                  <button className="p-2 text-gray-300 hover:text-white transition-colors">
+                    <Search className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => navigate('/cart')}
+                    className="p-2 text-gray-300 hover:text-white transition-colors relative"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                        {cartCount}
+                      </span>
+                    )}
+                  </button>
                   <button
                     onClick={() => navigate('/login')}
                     className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
                   >
                     Login
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}

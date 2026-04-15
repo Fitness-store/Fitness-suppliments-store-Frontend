@@ -74,9 +74,10 @@ const ProductDetailsPage = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    const result = addToCart(product, quantity);
+  const handleAddToCart = async () => {
+    const result = await addToCart(product, quantity);
     setCartMessage(result.message);
+    setTimeout(() => setCartMessage(''), 3000);
   };
   if (loading) {
     return (

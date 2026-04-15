@@ -35,10 +35,11 @@ const ProductCard = ({ product }) => {
   const discount = mrp && finalPrice ? Math.round(((mrp - finalPrice) / mrp) * 100) : 0;
   const hasStock = stock > 0;
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.stopPropagation();
-    const result = addToCart(product, 1);
+    const result = await addToCart(product, 1);
     setCartMessage(result.message);
+    setTimeout(() => setCartMessage(''), 2000);
   };
 
   return (

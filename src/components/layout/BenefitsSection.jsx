@@ -1,15 +1,18 @@
 import React from 'react';
 import { FlaskConical, Truck, ShieldCheck, Headphones, RotateCcw, BadgeCheck } from 'lucide-react';
 
-const BenefitCard = ({ icon: Icon, title, description, color }) => (
+const BenefitCard = ({ icon, title, description, color }) => {
+  const IconComponent = icon;
+  return (
   <div className="group p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
     <div className={`w-14 h-14 ${color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-      <Icon className="w-7 h-7 text-white" />
+      <IconComponent className="w-7 h-7 text-white" />
     </div>
     <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
     <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
   </div>
-);
+  );
+};
 
 const BenefitsSection = () => {
   const benefits = [

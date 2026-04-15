@@ -3,6 +3,8 @@ import LandingPage from './pages/LandingPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import AboutPage from './pages/AboutPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 function App() {
   return (
     <Router>
@@ -11,6 +13,8 @@ function App() {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
       </Routes>
     </Router>
   );

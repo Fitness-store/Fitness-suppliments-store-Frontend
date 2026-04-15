@@ -15,7 +15,6 @@ const ProductCard = ({ product }) => {
   };
 
   const { 
-    productId, 
     name, 
     brand, 
     description, 

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Dumbbell, Menu, X, ShoppingCart, User, Search } from 'lucide-react';
+import { useAuth } from '../../context/useAuth';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +21,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', href: '#', type: 'scroll' },
-    { name: 'Products', href: '#products-section', type: 'scroll' },
+    { name: 'Products', href: '/products', type: 'page' },
     { name: 'About', href: '/about', type: 'page' },
     { name: 'Contact', href: '#footer', type: 'scroll' },
   ];
@@ -43,6 +45,11 @@ const Navbar = () => {
       }
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
   };
 
   return (
@@ -91,6 +98,21 @@ const Navbar = () => {
             <button className="p-2 text-gray-300 hover:text-white transition-colors">
               <User className="w-5 h-5" />
             </button>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -129,6 +151,21 @@ const Navbar = () => {
                 <button className="p-2 text-gray-300 hover:text-white transition-colors">
                   <User className="w-5 h-5" />
                 </button>
+                {isAuthenticated ? (
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                  >
+                    Login
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { fetchProductById } from '../services/api';
+import { fetchProductById, placeOrder } from '../services/api';
 import { Star, ShoppingCart, Check, Minus, Plus, ArrowLeft, Heart, Share2, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { useAuth } from '../context/useAuth';
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [orderMessage, setOrderMessage] = useState('');
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -45,6 +49,26 @@ const ProductDetailsPage = () => {
   const calculateDiscount = () => {
     if (!product?.mrp || !product?.finalPrice) return 0;
     return Math.round(((product.mrp - product.finalPrice) / product.mrp) * 100);
+  };
+
+  const handleOrderNow = async () => {
+    if (!isAuthenticated) {
+      navigate(`/login?redirect=${encodeURIComponent(`/product/${id}`)}`);
+      return;
+    }
+
+    setOrderLoading(true);
+    setOrderMessage('');
+    try {
+      const response = await placeOrder({
+        totalAmount: (product.finalPrice || 0) * quantity,
+      });
+      setOrderMessage(response?.message || 'Order placed successfully');
+    } catch (err) {
+      setOrderMessage(err.message || 'Failed to place order');
+    } finally {
+      setOrderLoading(false);
+    }
   };
   if (loading) {
     return (
@@ -184,12 +208,12 @@ const ProductDetailsPage = () => {
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-3xl font-bold text-gray-900">
-                  ₹{product.finalPrice?.toLocaleString()}
+                  â‚¹{product.finalPrice?.toLocaleString()}
                 </span>
                 {product.mrp > product.finalPrice && (
                   <>
                     <span className="text-xl text-gray-400 line-through">
-                      ₹{product.mrp?.toLocaleString()}
+                      â‚¹{product.mrp?.toLocaleString()}
                     </span>
                     <span className="text-green-600 font-medium">{discount}% off</span>
                   </>
@@ -229,6 +253,7 @@ const ProductDetailsPage = () => {
               {/* Add to Cart Button */}
               <button
                 disabled={!hasStock}
+                onClick={handleOrderNow}
                 className={`w-full flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 mb-6 ${
                   hasStock
                     ? 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg hover:shadow-xl'
@@ -236,8 +261,13 @@ const ProductDetailsPage = () => {
                 }`}
               >
                 <ShoppingCart className="w-5 h-5" />
-                {hasStock ? 'Add to Cart' : 'Out of Stock'}
+                {hasStock ? (orderLoading ? 'Placing Order...' : 'Order Now') : 'Out of Stock'}
               </button>
+              {orderMessage && (
+                <p className={`text-sm mb-4 ${orderMessage.toLowerCase().includes('fail') ? 'text-red-600' : 'text-green-700'}`}>
+                  {orderMessage}
+                </p>
+              )}
 
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-4 py-6 border-t border-gray-100">
@@ -287,17 +317,17 @@ const ProductDetailsPage = () => {
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-500">Category</span>
-                      <span className="font-medium capitalize">{product.category}</span>
+                      <span className="font-medium capitalize">{product.categoryName}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-100">
                       <span className="text-gray-500">Stock</span>
                       <span className="font-medium">{product.stock} units</span>
                     </div>
-                    {product.vegetarian !== undefined && (
+                    {product.isVegetarian !== undefined && (
                       <div className="flex justify-between py-2 border-b border-gray-100">
                         <span className="text-gray-500">Type</span>
                         <span className="font-medium">
-                          {product.vegetarian ? 'Vegetarian' : 'Non-Vegetarian'}
+                          {product.isVegetarian ? 'Vegetarian' : 'Non-Vegetarian'}
                         </span>
                       </div>
                     )}
@@ -315,3 +345,4 @@ const ProductDetailsPage = () => {
 };
 
 export default ProductDetailsPage;
+

@@ -37,39 +37,19 @@ const CartPage = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Cart</h1>
 
-          {isAuthenticated ? (
+          {cartItems.length === 0 ? (
             <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
               <ShoppingCart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Cart is empty</h2>
-              <p className="text-gray-600 mb-6">You are logged in. No items are currently available in your cart.</p>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Your cart is empty</h2>
+              <p className="text-gray-600 mb-6">
+                Looks like you haven't added any items to your cart yet.
+              </p>
               <button
                 onClick={() => navigate('/products')}
                 className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
               >
                 Continue Shopping
               </button>
-            </div>
-          ) : cartItems.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
-              <ShoppingCart className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Your guest cart is empty</h2>
-              <p className="text-gray-600 mb-6">
-                Add items while logged out, or login/signup to continue.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <Link
-                  to="/login?redirect=%2Fcart"
-                  className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup?redirect=%2Fcart"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100"
-                >
-                  Sign Up
-                </Link>
-              </div>
             </div>
           ) : (
             <div className="space-y-6">
@@ -118,21 +98,39 @@ const CartPage = () => {
                   <span className="text-gray-600">Subtotal</span>
                   <span className="text-xl font-bold text-gray-900">Rs {subtotal.toLocaleString()}</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">Login or signup to continue to checkout.</p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    to="/login?redirect=%2Fcart"
-                    className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-center"
-                  >
-                    Login To Checkout
-                  </Link>
-                  <button
-                    onClick={clearCart}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100"
-                  >
-                    Clear Cart
-                  </button>
-                </div>
+                {isAuthenticated ? (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <button
+                      className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-center"
+                    >
+                      Proceed to Checkout
+                    </button>
+                    <button
+                      onClick={clearCart}
+                      className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100"
+                    >
+                      Clear Cart
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm text-gray-500 mb-4">Login or signup to continue to checkout.</p>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Link
+                        to="/login?redirect=%2Fcart"
+                        className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-center"
+                      >
+                        Login To Checkout
+                      </Link>
+                      <button
+                        onClick={clearCart}
+                        className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100"
+                      >
+                        Clear Cart
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}

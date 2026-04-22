@@ -38,8 +38,7 @@ const isAuthRefreshPath = (url = '') => url.includes('/fs/auth/refresh');
 
 const isAuthActionPath = (url = '') =>
   url.includes('/fs/auth/login') ||
-  url.includes('/fs/auth/signup') ||
-  url.includes('/fs/auth/otp/');
+  url.includes('/fs/auth/signup');
 
 api.interceptors.request.use(
   (config) => {
@@ -153,23 +152,6 @@ export const healthCheck = async () => {
   }
 };
 
-export const sendOtp = async (phone) => {
-  try {
-    const response = await api.post('/fs/auth/otp/send', { phone });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to send OTP');
-  }
-};
-
-export const verifyOtp = async ({ phone, otp }) => {
-  try {
-    const response = await api.post('/fs/auth/otp/verify', { phone, otp });
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to verify OTP');
-  }
-};
 
 export const signupUser = async (payload) => {
   try {

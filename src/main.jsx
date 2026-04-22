@@ -4,12 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { CartProvider } from './context/CartContext.jsx'
+import { AdminAuthProvider } from './context/AdminAuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
       <CartProvider>
-        <App />
+        <AdminAuthProvider>
+          <App />
+        </AdminAuthProvider>
       </CartProvider>
     </AuthProvider>
   </StrictMode>,

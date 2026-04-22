@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/useAuth';
-import { sendOtp, verifyOtp } from '../services/api';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -14,52 +13,15 @@ const SignupPage = () => {
     email: '',
     phone: '',
     password: '',
-    otp: '',
   });
-  const [verificationToken, setVerificationToken] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [otpLoading, setOtpLoading] = useState(false);
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
 
   const redirectTo = new URLSearchParams(location.search).get('redirect') || '/';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSendOtp = async () => {
-    setOtpLoading(true);
-    setError('');
-    setMessage('');
-    try {
-      await sendOtp(formData.phone);
-      setOtpSent(true);
-      setMessage('OTP sent to your phone. Check backend logs for mock OTP.');
-    } catch (err) {
-      setError(err.message || 'Failed to send OTP');
-    } finally {
-      setOtpLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    setOtpLoading(true);
-    setError('');
-    setMessage('');
-    try {
-      const response = await verifyOtp({ phone: formData.phone, otp: formData.otp });
-      setVerificationToken(response.verificationToken);
-      setOtpVerified(true);
-      setMessage('Phone number verified successfully.');
-    } catch (err) {
-      setError(err.message || 'Failed to verify OTP');
-    } finally {
-      setOtpLoading(false);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,9 +32,8 @@ const SignupPage = () => {
       await signup({
         fullName: formData.fullName,
         email: formData.email,
-        phone: formData.phone,
+        phone: formData.phone || undefined,
         password: formData.password,
-        verificationToken,
       });
       navigate(redirectTo, { replace: true });
     } catch (err) {
@@ -89,7 +50,7 @@ const SignupPage = () => {
         <div className="max-w-md mx-auto px-4">
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h1>
-            <p className="text-gray-600 mb-6">Signup with OTP verification to place orders.</p>
+            <p className="text-gray-600 mb-6">Sign up to start shopping for premium supplements.</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -110,48 +71,14 @@ const SignupPage = () => {
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 required
               />
-              <div className="flex gap-2">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Phone"
-                  className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={handleSendOtp}
-                  disabled={otpLoading || !formData.phone}
-                  className="px-4 py-3 bg-navy-900 text-white rounded-lg hover:bg-navy-800 disabled:opacity-60"
-                >
-                  {otpLoading ? '...' : 'Send OTP'}
-                </button>
-              </div>
-
-              {otpSent && (
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    name="otp"
-                    value={formData.otp}
-                    onChange={handleChange}
-                    placeholder="Enter OTP"
-                    className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={handleVerifyOtp}
-                    disabled={otpLoading || !formData.otp || otpVerified}
-                    className="px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-60"
-                  >
-                    {otpVerified ? 'Verified' : 'Verify'}
-                  </button>
-                </div>
-              )}
-
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone (optional)"
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
               <input
                 type="password"
                 name="password"
@@ -162,15 +89,14 @@ const SignupPage = () => {
                 required
               />
 
-              {message && <p className="text-green-700 text-sm">{message}</p>}
               {error && <p className="text-red-600 text-sm">{error}</p>}
 
               <button
                 type="submit"
-                disabled={loading || !otpVerified}
+                disabled={loading}
                 className="w-full py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-60"
               >
-                {loading ? 'Signing up...' : 'Signup'}
+                {loading ? 'Signing up...' : 'Sign Up'}
               </button>
             </form>
 
@@ -189,4 +115,3 @@ const SignupPage = () => {
 };
 
 export default SignupPage;
-

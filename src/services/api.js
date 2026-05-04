@@ -83,14 +83,31 @@ api.interceptors.response.use(
   }
 );
 
+/**
+ * Extracts a human-readable error message from API error responses.
+ * Handles both BusinessException format ({ errors: [{ message }] })
+ * and direct format ({ message }).
+ */
+const extractErrorMessage = (error, fallback = 'Something went wrong') => {
+  const data = error.response?.data;
+  if (!data) return fallback;
+  // BusinessException / validation errors: { errors: [{ message }] }
+  if (Array.isArray(data.errors) && data.errors.length > 0) {
+    return data.errors.map(e => e.message).join(', ');
+  }
+  // Direct message format: { message }
+  if (data.message) return data.message;
+  return fallback;
+};
+
 export const fetchProducts = async (displayInStock = true) => {
   try {
     const response = await api.get('/fs/product/all', {
-      params: { displayInStock: displayInStock.toString() }
+      params: { displayInStock }
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch products');
+    throw new Error(extractErrorMessage(error, 'Failed to fetch products'));
   }
 };
 
@@ -99,7 +116,7 @@ export const fetchProductById = async (id) => {
     const response = await api.get(`/fs/product/${id}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch product');
+    throw new Error(extractErrorMessage(error, 'Failed to fetch product'));
   }
 };
 
@@ -110,7 +127,7 @@ export const fetchProductsByCategoryId = async (categoryId) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch products by category');
+    throw new Error(extractErrorMessage(error, 'Failed to fetch products by category'));
   }
 };
 
@@ -119,7 +136,7 @@ export const addProduct = async (productData) => {
     const response = await api.post('/fs/product/add', productData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to add product');
+    throw new Error(extractErrorMessage(error, 'Failed to add product'));
   }
 };
 
@@ -138,7 +155,7 @@ export const addCategory = async (categoryData) => {
     const response = await api.post('/fs/category/add', categoryData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to add category');
+    throw new Error(extractErrorMessage(error, 'Failed to add category'));
   }
 };
 

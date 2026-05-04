@@ -9,6 +9,20 @@ const adminApi = () => {
   };
 };
 
+/**
+ * Extracts a human-readable error message from API error responses.
+ * Handles BusinessException ({ errors: [{ message }] }) and direct ({ message }).
+ */
+const extractAdminError = (error, fallback = 'Something went wrong') => {
+  const data = error.response?.data;
+  if (!data) return fallback;
+  if (Array.isArray(data.errors) && data.errors.length > 0) {
+    return data.errors.map(e => e.message).join(', ');
+  }
+  if (data.message) return data.message;
+  return fallback;
+};
+
 // =================== DASHBOARD ===================
 export const fetchDashboardStats = async () => {
   const response = await api.get('/fs/admin/dashboard/stats', adminApi());
@@ -27,13 +41,21 @@ export const fetchUserById = async (id) => {
 };
 
 export const updateUser = async (id, data) => {
-  const response = await api.put(`/fs/admin/users/${id}`, data, adminApi());
-  return response.data;
+  try {
+    const response = await api.put(`/fs/admin/users/${id}`, data, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to update user'));
+  }
 };
 
 export const deleteUser = async (id) => {
-  const response = await api.delete(`/fs/admin/users/${id}`, adminApi());
-  return response.data;
+  try {
+    const response = await api.delete(`/fs/admin/users/${id}`, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to delete user'));
+  }
 };
 
 // =================== PRODUCTS ===================
@@ -43,31 +65,47 @@ export const adminFetchProducts = async () => {
 };
 
 export const adminUpdateProduct = async (id, data) => {
-  const response = await api.put(`/fs/admin/products/${id}`, data, adminApi());
-  return response.data;
+  try {
+    const response = await api.put(`/fs/admin/products/${id}`, data, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to update product'));
+  }
 };
 
 export const adminDeleteProduct = async (id) => {
-  const response = await api.delete(`/fs/admin/products/${id}`, adminApi());
-  return response.data;
+  try {
+    const response = await api.delete(`/fs/admin/products/${id}`, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to delete product'));
+  }
 };
 
 export const adminUpdateStock = async (id, stock) => {
-  const response = await api.patch(`/fs/admin/products/${id}/stock`, { stock }, adminApi());
-  return response.data;
+  try {
+    const response = await api.patch(`/fs/admin/products/${id}/stock`, { stock }, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to update stock'));
+  }
 };
 
 export const adminUploadProductImage = async (id, file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  const token = localStorage.getItem(ADMIN_TOKEN_KEY);
-  const response = await api.post(`/fs/admin/products/${id}/image`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-  return response.data;
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+    const response = await api.post(`/fs/admin/products/${id}/image`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Image upload failed'));
+  }
 };
 
 // =================== CATEGORIES ===================
@@ -77,18 +115,30 @@ export const adminFetchCategories = async () => {
 };
 
 export const adminAddCategory = async (data) => {
-  const response = await api.post('/fs/admin/categories', data, adminApi());
-  return response.data;
+  try {
+    const response = await api.post('/fs/admin/categories', data, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to add category'));
+  }
 };
 
 export const adminUpdateCategory = async (id, data) => {
-  const response = await api.put(`/fs/admin/categories/${id}`, data, adminApi());
-  return response.data;
+  try {
+    const response = await api.put(`/fs/admin/categories/${id}`, data, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to update category'));
+  }
 };
 
 export const adminDeleteCategory = async (id) => {
-  const response = await api.delete(`/fs/admin/categories/${id}`, adminApi());
-  return response.data;
+  try {
+    const response = await api.delete(`/fs/admin/categories/${id}`, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to delete category'));
+  }
 };
 
 // =================== ORDERS ===================
@@ -104,8 +154,12 @@ export const adminFetchOrderById = async (id) => {
 };
 
 export const adminUpdateOrderStatus = async (id, status) => {
-  const response = await api.patch(`/fs/admin/orders/${id}/status`, { status }, adminApi());
-  return response.data;
+  try {
+    const response = await api.patch(`/fs/admin/orders/${id}/status`, { status }, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to update order status'));
+  }
 };
 
 // =================== ADMIN MANAGEMENT ===================
@@ -115,11 +169,19 @@ export const fetchAllAdmins = async () => {
 };
 
 export const addAdmin = async (data) => {
-  const response = await api.post('/fs/admin/admins', data, adminApi());
-  return response.data;
+  try {
+    const response = await api.post('/fs/admin/admins', data, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to add admin'));
+  }
 };
 
 export const deleteAdmin = async (id) => {
-  const response = await api.delete(`/fs/admin/admins/${id}`, adminApi());
-  return response.data;
+  try {
+    const response = await api.delete(`/fs/admin/admins/${id}`, adminApi());
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Failed to delete admin'));
+  }
 };

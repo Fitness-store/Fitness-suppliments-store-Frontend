@@ -65,6 +65,14 @@ const AdminProductsPage = () => {
     try { await adminUploadProductImage(productId, file); load(); } catch (e) { alert('Image upload failed'); }
   };
 
+  const handleToggleStatus = async (p) => {
+    const newStatus = p.statusActiveInd === 'Y' ? 'N' : 'Y';
+    try {
+      await adminUpdateProduct(p.productId, { statusActiveInd: newStatus });
+      load();
+    } catch (e) { alert(e.message || 'Failed to toggle status'); }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary-500"></div></div>;
 
   return (
@@ -93,7 +101,11 @@ const AdminProductsPage = () => {
               <td className="py-3 px-4 text-sm text-gray-300">{p.brand}</td>
               <td className="py-3 px-4"><p className="text-sm text-white font-medium">₹{p.finalPrice}</p><p className="text-xs text-gray-500 line-through">₹{p.mrp}</p></td>
               <td className="py-3 px-4"><span className={`px-2 py-1 rounded-md text-xs font-bold ${p.stock===0?'bg-red-500/15 text-red-400':p.stock<10?'bg-yellow-500/15 text-yellow-400':'bg-green-500/15 text-green-400'}`}>{p.stock}</span></td>
-              <td className="py-3 px-4"><span className={`px-2 py-1 rounded-md text-xs font-semibold ${p.statusActiveInd==='Y'?'bg-green-500/15 text-green-400':'bg-red-500/15 text-red-400'}`}>{p.statusActiveInd==='Y'?'Active':'Inactive'}</span></td>
+              <td className="py-3 px-4">
+                <button onClick={()=>handleToggleStatus(p)} className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none" style={{ backgroundColor: p.statusActiveInd === 'Y' ? 'rgb(34 197 94 / 0.3)' : 'rgb(239 68 68 / 0.2)' }}>
+                  <span className={`inline-block h-4 w-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ${p.statusActiveInd === 'Y' ? 'translate-x-6' : 'translate-x-1'}`} />
+                </button>
+              </td>
               <td className="py-3 px-4"><div className="flex items-center gap-1">
                 <button onClick={()=>openEdit(p)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-white transition-colors"><Edit2 size={14}/></button>
                 <label className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-blue-400 cursor-pointer transition-colors"><Upload size={14}/><input type="file" accept="image/*" className="hidden" onChange={e=>{if(e.target.files[0])handleImageUpload(p.productId,e.target.files[0])}}/></label>

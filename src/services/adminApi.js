@@ -108,6 +108,23 @@ export const adminUploadProductImage = async (id, file) => {
   }
 };
 
+export const adminUploadProductImageForCreate = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+    const response = await api.post('/fs/admin/products/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(extractAdminError(error, 'Image upload failed'));
+  }
+};
+
 // =================== CATEGORIES ===================
 export const adminFetchCategories = async () => {
   const response = await api.get('/fs/admin/categories', adminApi());

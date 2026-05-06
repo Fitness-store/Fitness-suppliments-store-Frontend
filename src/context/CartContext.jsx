@@ -48,10 +48,10 @@ export const CartProvider = ({ children }) => {
       setCartLoading(true);
       try {
         const response = await fetchCart();
-        if (response?.success && response?.cart?.items) {
-          setAuthCartItems(response.cart.items.map(item => ({
+        if (response?.success && response?.items) {
+          setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
-            name: item.productName,
+            name: item.name,
             brand: item.brand,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
@@ -86,10 +86,10 @@ export const CartProvider = ({ children }) => {
         if (response?.success) {
           // Refresh cart after adding
           const cartResponse = await fetchCart();
-          if (cartResponse?.success && cartResponse?.cart?.items) {
-            setAuthCartItems(cartResponse.cart.items.map(item => ({
+          if (cartResponse?.success && cartResponse?.items) {
+            setAuthCartItems(cartResponse.items.map(item => ({
               productId: item.productId,
-              name: item.productName,
+              name: item.name,
               brand: item.brand,
               imageUrl: item.imageUrl,
               finalPrice: item.finalPrice,
@@ -146,10 +146,10 @@ export const CartProvider = ({ children }) => {
         setCartLoading(true);
         await updateCartItemQuantity(item.cartItemId, { quantity: item.quantity + 1 });
         const response = await fetchCart();
-        if (response?.success && response?.cart?.items) {
-          setAuthCartItems(response.cart.items.map(item => ({
+        if (response?.success && response?.items) {
+          setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
-            name: item.productName,
+            name: item.name,
             brand: item.brand,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
@@ -181,10 +181,10 @@ export const CartProvider = ({ children }) => {
         setCartLoading(true);
         await updateCartItemQuantity(item.cartItemId, { quantity: item.quantity - 1 });
         const response = await fetchCart();
-        if (response?.success && response?.cart?.items) {
-          setAuthCartItems(response.cart.items.map(item => ({
+        if (response?.success && response?.items) {
+          setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
-            name: item.productName,
+            name: item.name,
             brand: item.brand,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
@@ -216,10 +216,10 @@ export const CartProvider = ({ children }) => {
         setCartLoading(true);
         await removeCartItem(item.cartItemId);
         const response = await fetchCart();
-        if (response?.success && response?.cart?.items) {
-          setAuthCartItems(response.cart.items.map(item => ({
+        if (response?.success && response?.items) {
+          setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
-            name: item.productName,
+            name: item.name,
             brand: item.brand,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,

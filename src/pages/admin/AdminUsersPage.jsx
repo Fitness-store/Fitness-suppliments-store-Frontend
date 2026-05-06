@@ -44,10 +44,17 @@ const AdminUsersPage = () => {
               <td className="py-3 px-4"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-orange flex items-center justify-center"><span className="text-white text-xs font-bold">{u.fullName?.charAt(0)}</span></div><span className="text-sm text-white font-medium">{u.fullName}</span></div></td>
               <td className="py-3 px-4 text-sm text-gray-300">{u.email}</td>
               <td className="py-3 px-4 text-sm text-gray-300">{u.phone}</td>
-              <td className="py-3 px-4"><span className="px-2 py-1 rounded-md text-xs font-semibold bg-blue-500/15 text-blue-400">{u.role}</span></td>
+              <td className="py-3 px-4"><span className={`px-2 py-1 rounded-md text-xs font-semibold ${u.role === 'SUPER_ADMIN' ? 'bg-purple-500/15 text-purple-400' : u.role === 'ADMIN' ? 'bg-blue-500/15 text-blue-400' : u.role === 'MANAGER' ? 'bg-amber-500/15 text-amber-400' : 'bg-emerald-500/15 text-emerald-400'}`}>{u.role}</span></td>
               <td className="py-3 px-4"><div className="flex gap-1">
-                <button onClick={()=>openEdit(u)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-white"><Edit2 size={14}/></button>
-                <button onClick={()=>handleDelete(u.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400"><Trash2 size={14}/></button>
+                {u.role !== 'SUPER_ADMIN' && (
+                  <>
+                    <button onClick={()=>openEdit(u)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-white"><Edit2 size={14}/></button>
+                    <button onClick={()=>handleDelete(u.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400"><Trash2 size={14}/></button>
+                  </>
+                )}
+                {u.role === 'SUPER_ADMIN' && (
+                  <span className="text-xs text-gray-600 italic px-2 py-2">Protected</span>
+                )}
               </div></td>
             </tr>
           ))}
@@ -64,7 +71,7 @@ const AdminUsersPage = () => {
               {[{k:'fullName',l:'Full Name'},{k:'email',l:'Email'},{k:'phone',l:'Phone'}].map(({k,l})=>(
                 <div key={k}><label className="block text-xs text-gray-500 mb-1">{l}</label><input value={form[k]||''} onChange={e=>setForm({...form,[k]:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"/></div>
               ))}
-              <div><label className="block text-xs text-gray-500 mb-1">Role</label><select value={form.role||'USER'} onChange={e=>setForm({...form,role:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"><option value="USER">USER</option><option value="ADMIN">ADMIN</option></select></div>
+              <div><label className="block text-xs text-gray-500 mb-1">Role</label><select value={form.role||'USER'} onChange={e=>setForm({...form,role:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"><option value="USER">USER</option><option value="ADMIN">ADMIN</option><option value="MANAGER">MANAGER</option></select></div>
             </div>
             <div className="flex justify-end gap-3 p-5 border-t border-white/[0.06]">
               <button onClick={()=>setModal(null)} className="px-4 py-2 text-sm text-gray-400">Cancel</button>

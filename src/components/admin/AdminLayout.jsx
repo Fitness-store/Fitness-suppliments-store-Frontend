@@ -10,7 +10,7 @@ const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/admin/products', icon: Package, label: 'Products' },
   { to: '/admin/categories', icon: Tag, label: 'Categories' },
-  { to: '/admin/users', icon: Users, label: 'Users' },
+  { to: '/admin/users', icon: Users, label: 'Users', roles: ['ADMIN', 'SUPER_ADMIN'] },
   { to: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { to: '/admin/inventory', icon: Warehouse, label: 'Inventory' },
 ];
@@ -28,9 +28,12 @@ const AdminLayout = () => {
     navigate('/admin/login');
   };
 
-  const allNavItems = isSuperAdmin
-    ? [...navItems, { to: '/admin/admins', icon: Shield, label: 'Admins' }]
-    : navItems;
+  const adminRole = adminUser?.role;
+
+  const allNavItems = [
+    ...navItems.filter(item => !item.roles || item.roles.includes(adminRole)),
+    ...(isSuperAdmin ? [{ to: '/admin/admins', icon: Shield, label: 'Admins' }] : []),
+  ];
 
   return (
     <div className="min-h-screen bg-[#0B1120] flex">

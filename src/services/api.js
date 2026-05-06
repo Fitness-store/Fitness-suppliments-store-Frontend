@@ -133,7 +133,7 @@ export const fetchProductsByCategoryId = async (categoryId) => {
 
 export const addProduct = async (productData) => {
   try {
-    const response = await api.post('/fs/product/add', productData);
+    const response = await api.post('/fs/admin/products', productData);
     return response.data;
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Failed to add product'));

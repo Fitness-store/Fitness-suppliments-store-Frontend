@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { adminFetchProducts, adminUpdateProduct, adminDeleteProduct, adminFetchCategories, adminUploadProductImage } from '../../services/adminApi';
+import { adminFetchProducts, adminUpdateProduct, adminDeleteProduct, adminFetchCategories, adminUploadProductImage, adminUploadProductImageForCreate } from '../../services/adminApi';
 import { addProduct, fetchCategories } from '../../services/api';
 import { Search, Plus, Edit2, Trash2, X, Upload } from 'lucide-react';
 
@@ -12,6 +12,7 @@ const AdminProductsPage = () => {
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState('');
 
   const load = async () => {
@@ -63,6 +64,20 @@ const AdminProductsPage = () => {
 
   const handleImageUpload = async (productId, file) => {
     try { await adminUploadProductImage(productId, file); load(); } catch (e) { alert('Image upload failed'); }
+  };
+
+  const handleFormImageUpload = async (file) => {
+    if (!file) return;
+    setUploadingImage(true);
+    setError('');
+    try {
+      const res = await adminUploadProductImageForCreate(file);
+      setForm(prev => ({ ...prev, imageUrl: res.imageUrl || '' }));
+    } catch (e) {
+      setError(e.message || 'Image upload failed');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleToggleStatus = async (p) => {
@@ -131,6 +146,19 @@ const AdminProductsPage = () => {
                 {[{k:'name',l:'Name'},{k:'brand',l:'Brand'},{k:'flavor',l:'Flavor'},{k:'netQuantity',l:'Net Quantity'},{k:'mrp',l:'MRP',t:'number'},{k:'finalPrice',l:'Final Price',t:'number'},{k:'stock',l:'Stock',t:'number'},{k:'imageUrl',l:'Image URL'}].map(({k,l,t})=>(
                   <div key={k}><label className="block text-xs text-gray-500 mb-1">{l}</label><input type={t||'text'} value={form[k]||''} onChange={e=>setForm({...form,[k]:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"/></div>
                 ))}
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Upload Image</label>
+                  <label className="flex items-center justify-center gap-2 px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-gray-300 text-sm cursor-pointer hover:bg-white/[0.06]">
+                    <Upload size={14} />
+                    {uploadingImage ? 'Uploading...' : 'Choose image'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={e => { if (e.target.files?.[0]) handleFormImageUpload(e.target.files[0]); }}
+                    />
+                  </label>
+                </div>
                 <div><label className="block text-xs text-gray-500 mb-1">Category</label><select value={form.categoryId||''} onChange={e=>setForm({...form,categoryId:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"><option value="">Select</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
                 <div><label className="block text-xs text-gray-500 mb-1">Status</label><select value={form.statusActiveInd||'Y'} onChange={e=>setForm({...form,statusActiveInd:e.target.value})} className="w-full px-3 py-2 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:border-primary-500/50"><option value="Y">Active</option><option value="N">Inactive</option></select></div>
               </div>

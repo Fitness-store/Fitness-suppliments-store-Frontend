@@ -20,6 +20,7 @@ const ProductDetailsPage = () => {
   const [orderLoading, setOrderLoading] = useState(false);
   const [orderMessage, setOrderMessage] = useState('');
   const [cartMessage, setCartMessage] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -29,6 +30,9 @@ const ProductDetailsPage = () => {
         const response = await fetchProductById(id);
         if (response?.success && response?.product) {
           setProduct(response.product);
+          if (response.product.variants && response.product.variants.length > 0) {
+            setSelectedVariant(response.product.variants[0]);
+          }
         } else {
           setError('Product not found');
         }
@@ -46,12 +50,12 @@ const ProductDetailsPage = () => {
 
 
   const handleQuantityChange = (delta) => {
-    setQuantity(prev => Math.max(1, Math.min(prev + delta, product?.stock || 10)));
+    setQuantity(prev => Math.max(1, Math.min(prev + delta, selectedVariant?.stock || 10)));
   };
 
   const calculateDiscount = () => {
-    if (!product?.mrp || !product?.finalPrice) return 0;
-    return Math.round(((product.mrp - product.finalPrice) / product.mrp) * 100);
+    if (!selectedVariant?.mrp || !selectedVariant?.finalPrice) return 0;
+    return Math.round(((selectedVariant.mrp - selectedVariant.finalPrice) / selectedVariant.mrp) * 100);
   };
 
   const handleOrderNow = async () => {
@@ -64,7 +68,7 @@ const ProductDetailsPage = () => {
     setOrderMessage('');
     try {
       const response = await placeOrder({
-        totalAmount: (product.finalPrice || 0) * quantity,
+        totalAmount: (selectedVariant.finalPrice || 0) * quantity,
       });
       setOrderMessage(response?.message || 'Order placed successfully');
     } catch (err) {
@@ -75,7 +79,9 @@ const ProductDetailsPage = () => {
   };
 
   const handleAddToCart = async () => {
-    const result = await addToCart(product, quantity);
+    if (!selectedVariant) return;
+    const cartProduct = { ...product, variantId: selectedVariant.id, flavor: selectedVariant.flavor, netQuantity: selectedVariant.netQuantity, finalPrice: selectedVariant.finalPrice, mrp: selectedVariant.mrp, stock: selectedVariant.stock };
+    const result = await addToCart(cartProduct, quantity);
     setCartMessage(result.message);
     setTimeout(() => setCartMessage(''), 3000);
   };
@@ -128,7 +134,7 @@ const ProductDetailsPage = () => {
   }
 
   const discount = calculateDiscount();
-  const hasStock = product.stock > 0;
+  const hasStock = selectedVariant && selectedVariant.stock > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -217,23 +223,45 @@ const ProductDetailsPage = () => {
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="text-3xl font-bold text-gray-900">
-                  Rs {product.finalPrice?.toLocaleString()}
+                  Rs {selectedVariant?.finalPrice?.toLocaleString()}
                 </span>
-                {product.mrp > product.finalPrice && (
+                {selectedVariant?.mrp > selectedVariant?.finalPrice && (
                   <>
                     <span className="text-xl text-gray-400 line-through">
-                      Rs {product.mrp?.toLocaleString()}
+                      Rs {selectedVariant?.mrp?.toLocaleString()}
                     </span>
                     <span className="text-green-600 font-medium">{discount}% off</span>
                   </>
                 )}
               </div>
+              
+              {/* Variant Selector */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="mb-6 space-y-4">
+                  <h3 className="font-medium text-gray-900">Select Variant</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant.id}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${
+                          selectedVariant?.id === variant.id
+                            ? 'border-primary-600 bg-primary-50 text-primary-700'
+                            : 'border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {variant.flavor} - {variant.netQuantity}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Stock Status */}
               <div className="flex items-center gap-2 mb-6">
                 <Check className={`w-5 h-5 ${hasStock ? 'text-green-500' : 'text-gray-400'}`} />
                 <span className={hasStock ? 'text-green-700' : 'text-gray-500'}>
-                  {hasStock ? `In Stock (${product.stock} units)` : 'Out of Stock'}
+                  {hasStock ? `In Stock (${selectedVariant?.stock} units)` : 'Out of Stock'}
                 </span>
               </div>
 
@@ -251,7 +279,7 @@ const ProductDetailsPage = () => {
                   <span className="w-12 text-center font-medium">{quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(1)}
-                    disabled={quantity >= product.stock}
+                    disabled={quantity >= (selectedVariant?.stock || 0)}
                     className="p-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Plus className="w-4 h-4" />

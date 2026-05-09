@@ -103,11 +103,11 @@ const Navbar = () => {
               className="p-2 text-gray-300 hover:text-white transition-colors relative"
             >
               <ShoppingCart className="w-5 h-5" />
-              {cartCount > 0 && !isAuthenticated ? (
+              {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
-              ) : null}
+              )}
             </button>
             {isAuthenticated && (
               <div className="profile-dropdown relative">
@@ -190,30 +190,30 @@ const Navbar = () => {
                   </button>
                 </>
               )}
-              {!isAuthenticated && (
-                <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
-                  <button className="p-2 text-gray-300 hover:text-white transition-colors">
-                    <Search className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => navigate('/cart')}
-                    className="p-2 text-gray-300 hover:text-white transition-colors relative"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
-                        {cartCount}
-                      </span>
-                    )}
-                  </button>
+              <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+                <button className="p-2 text-gray-300 hover:text-white transition-colors">
+                  <Search className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => navigate('/cart')}
+                  className="p-2 text-gray-300 hover:text-white transition-colors relative"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+                {!isAuthenticated && (
                   <button
                     onClick={() => navigate('/login')}
                     className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
                   >
                     Login
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}

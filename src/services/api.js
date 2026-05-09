@@ -229,6 +229,15 @@ export const placeOrder = async (payload) => {
   }
 };
 
+export const verifyPayment = async (payload) => {
+  try {
+    const response = await api.post('/fs/order/verify-payment', payload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to verify payment');
+  }
+};
+
 export const fetchMyOrders = async () => {
   try {
     const response = await api.get('/fs/order/my-orders');

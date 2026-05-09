@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/useAuth';
 import { useCart } from '../context/useCart';
-import { placeOrder } from '../services/api';
-import { MapPin, CreditCard, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react';
+import { placeOrder, verifyPayment } from '../services/api';
+import { MapPin, CreditCard, ShoppingBag, ArrowLeft, Loader2, Banknote, Smartphone } from 'lucide-react';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -25,8 +25,70 @@ const CheckoutPage = () => {
 
   const subtotal = cartItems.reduce((total, item) => total + (item.finalPrice || 0) * item.quantity, 0);
 
+  // Load Razorpay script on mount
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const openRazorpayWidget = (orderData) => {
+    const options = {
+      key: orderData.razorpayKeyId,
+      amount: Math.round(orderData.totalAmount * 100),
+      currency: 'INR',
+      name: 'IronCore Supplements',
+      description: `Order #${orderData.orderId}`,
+      order_id: orderData.razorpayOrderId,
+      handler: async function (response) {
+        // Payment completed on Razorpay side, now verify on our backend
+        setLoading(true);
+        setError(null);
+        try {
+          const verifyRes = await verifyPayment({
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature,
+          });
+
+          if (verifyRes?.success) {
+            await clearCart();
+            navigate(`/order-confirmation?orderId=${verifyRes.orderId}`);
+          } else {
+            setError(verifyRes?.message || 'Payment verification failed.');
+          }
+        } catch (err) {
+          setError(err.message || 'Payment verification failed. Contact support.');
+        } finally {
+          setLoading(false);
+        }
+      },
+      prefill: {
+        name: currentUser?.fullName || '',
+        email: currentUser?.email || '',
+        contact: form.phone,
+      },
+      theme: {
+        color: '#0284c7',
+      },
+      modal: {
+        ondismiss: function () {
+          setLoading(false);
+          setError('Payment was cancelled. Your order is pending. You can retry from My Orders.');
+        },
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   const handlePlaceOrder = async (e) => {
@@ -51,16 +113,24 @@ const CheckoutPage = () => {
       });
 
       if (response?.success) {
-        // Cart is cleared server-side; refresh the frontend cart
-        await clearCart();
-        navigate(`/order-confirmation?orderId=${response.orderId}`);
+        if (form.paymentMethod === 'COD') {
+          // COD — order is already confirmed, cart cleared server-side
+          await clearCart();
+          navigate(`/order-confirmation?orderId=${response.orderId}`);
+        } else {
+          // Online payment — open Razorpay widget
+          setLoading(false);
+          openRazorpayWidget(response);
+        }
       } else {
         setError(response?.message || 'Failed to place order.');
       }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      if (form.paymentMethod === 'COD') {
+        setLoading(false);
+      }
     }
   };
 
@@ -98,6 +168,11 @@ const CheckoutPage = () => {
       </div>
     );
   }
+
+  const paymentMethods = [
+    { value: 'COD', label: 'Cash on Delivery', desc: 'Pay when your order arrives', icon: Banknote },
+    { value: 'ONLINE', label: 'Pay Online', desc: 'UPI, Cards, Net Banking via Razorpay', icon: Smartphone },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -205,34 +280,35 @@ const CheckoutPage = () => {
                     Payment Method
                   </h2>
                   <div className="space-y-3">
-                    {[
-                      { value: 'COD', label: 'Cash on Delivery', desc: 'Pay when your order arrives' },
-                      { value: 'UPI', label: 'UPI', desc: 'Coming soon', disabled: true },
-                      { value: 'CARD', label: 'Credit/Debit Card', desc: 'Coming soon', disabled: true },
-                    ].map((method) => (
-                      <label
-                        key={method.value}
-                        className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer transition-colors ${
-                          form.paymentMethod === method.value
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        } ${method.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value={method.value}
-                          checked={form.paymentMethod === method.value}
-                          onChange={handleChange}
-                          disabled={method.disabled}
-                          className="w-4 h-4 text-primary-600"
-                        />
-                        <div>
-                          <p className="font-medium text-gray-900">{method.label}</p>
-                          <p className="text-xs text-gray-500">{method.desc}</p>
-                        </div>
-                      </label>
-                    ))}
+                    {paymentMethods.map((method) => {
+                      const Icon = method.icon;
+                      return (
+                        <label
+                          key={method.value}
+                          className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all ${
+                            form.paymentMethod === method.value
+                              ? 'border-primary-500 bg-primary-50 shadow-sm'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="paymentMethod"
+                            value={method.value}
+                            checked={form.paymentMethod === method.value}
+                            onChange={handleChange}
+                            className="w-4 h-4 text-primary-600"
+                          />
+                          <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                            <Icon className="w-5 h-5 text-gray-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">{method.label}</p>
+                            <p className="text-xs text-gray-500">{method.desc}</p>
+                          </div>
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -290,10 +366,12 @@ const CheckoutPage = () => {
                     {loading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Placing Order...
+                        {form.paymentMethod === 'COD' ? 'Placing Order...' : 'Processing...'}
                       </>
-                    ) : (
+                    ) : form.paymentMethod === 'COD' ? (
                       `Place Order • ₹${subtotal.toLocaleString('en-IN')}`
+                    ) : (
+                      `Pay Now • ₹${subtotal.toLocaleString('en-IN')}`
                     )}
                   </button>
                 </div>

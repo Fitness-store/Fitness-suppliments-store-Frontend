@@ -8,6 +8,8 @@ import SignupPage from './pages/SignupPage';
 import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import OrdersPage from './pages/OrdersPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 // Admin imports
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -35,6 +37,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
 
         {/* Admin routes */}
         <Route path="/admin/login" element={<AdminLoginPage />} />

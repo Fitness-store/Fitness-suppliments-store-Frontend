@@ -102,6 +102,7 @@ const CartPage = () => {
                 {isAuthenticated ? (
                   <div className="flex flex-col sm:flex-row gap-3">
                     <button
+                      onClick={() => navigate('/checkout')}
                       className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-center"
                     >
                       Proceed to Checkout

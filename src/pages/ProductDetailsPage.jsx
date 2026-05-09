@@ -89,7 +89,7 @@ const ProductDetailsPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12">
+        <div className="pt-32 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse">
               <div className="h-8 w-32 bg-gray-200 rounded mb-8" />
@@ -114,7 +114,7 @@ const ProductDetailsPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12">
+        <div className="pt-32 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="bg-white rounded-2xl p-12 border border-gray-100">
               <p className="text-red-600 text-lg mb-6">{error || 'Product not found'}</p>
@@ -140,7 +140,7 @@ const ProductDetailsPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      <div className="pt-24 pb-12">
+      <div className="pt-32 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8">

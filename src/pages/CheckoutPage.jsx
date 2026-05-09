@@ -5,7 +5,26 @@ import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/useAuth';
 import { useCart } from '../context/useCart';
 import { placeOrder, verifyPayment } from '../services/api';
-import { MapPin, CreditCard, ShoppingBag, ArrowLeft, Loader2, Banknote, Smartphone } from 'lucide-react';
+import { MapPin, CreditCard, ShoppingBag, ArrowLeft, Loader2, Banknote, Smartphone, Tag, Truck, Info } from 'lucide-react';
+
+const SAVED_ADDRESS_KEY = 'ironcore_saved_address';
+
+const readSavedAddress = () => {
+  try {
+    const raw = localStorage.getItem(SAVED_ADDRESS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveAddress = (address) => {
+  try {
+    localStorage.setItem(SAVED_ADDRESS_KEY, JSON.stringify(address));
+  } catch {
+    // Ignore storage errors
+  }
+};
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -13,6 +32,9 @@ const CheckoutPage = () => {
   const { cartItems, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [useSavedAddress, setUseSavedAddress] = useState(false);
+
+  const savedAddress = readSavedAddress();
 
   const [form, setForm] = useState({
     shippingAddress: '',
@@ -23,7 +45,25 @@ const CheckoutPage = () => {
     paymentMethod: 'COD',
   });
 
+  // Auto-fill saved address on mount
+  useEffect(() => {
+    if (savedAddress) {
+      setForm(prev => ({
+        ...prev,
+        shippingAddress: savedAddress.shippingAddress || '',
+        city: savedAddress.city || '',
+        state: savedAddress.state || '',
+        pincode: savedAddress.pincode || '',
+        phone: savedAddress.phone || prev.phone,
+      }));
+      setUseSavedAddress(true);
+    }
+  }, []);
+
   const subtotal = cartItems.reduce((total, item) => total + (item.finalPrice || 0) * item.quantity, 0);
+  const isFreeShipping = subtotal >= 999;
+  const codCharge = form.paymentMethod === 'COD' ? Math.round((subtotal * 0.03) - 1) : 0;
+  const total = subtotal + codCharge;
 
   // Load Razorpay script on mount
   useEffect(() => {
@@ -49,7 +89,6 @@ const CheckoutPage = () => {
       description: `Order #${orderData.orderId}`,
       order_id: orderData.razorpayOrderId,
       handler: async function (response) {
-        // Payment completed on Razorpay side, now verify on our backend
         setLoading(true);
         setError(null);
         try {
@@ -95,11 +134,19 @@ const CheckoutPage = () => {
     e.preventDefault();
     setError(null);
 
-    // Validate
     if (!form.shippingAddress || !form.city || !form.state || !form.pincode || !form.phone) {
       setError('Please fill in all shipping fields.');
       return;
     }
+
+    // Save address for future use
+    saveAddress({
+      shippingAddress: form.shippingAddress,
+      city: form.city,
+      state: form.state,
+      pincode: form.pincode,
+      phone: form.phone,
+    });
 
     setLoading(true);
     try {
@@ -114,11 +161,9 @@ const CheckoutPage = () => {
 
       if (response?.success) {
         if (form.paymentMethod === 'COD') {
-          // COD — order is already confirmed, cart cleared server-side
           await clearCart();
           navigate(`/order-confirmation?orderId=${response.orderId}`);
         } else {
-          // Online payment — open Razorpay widget
           setLoading(false);
           openRazorpayWidget(response);
         }
@@ -134,11 +179,24 @@ const CheckoutPage = () => {
     }
   };
 
+  const clearSavedAddress = () => {
+    localStorage.removeItem(SAVED_ADDRESS_KEY);
+    setForm(prev => ({
+      ...prev,
+      shippingAddress: '',
+      city: '',
+      state: '',
+      pincode: '',
+      phone: currentUser?.phone || '',
+    }));
+    setUseSavedAddress(false);
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12 px-4">
+        <div className="pt-32 pb-12 px-4">
           <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
             <p className="text-gray-600 mb-4">Please login to checkout</p>
             <button onClick={() => navigate('/login?redirect=%2Fcheckout')} className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
@@ -155,7 +213,7 @@ const CheckoutPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12 px-4">
+        <div className="pt-32 pb-12 px-4">
           <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
             <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">Your cart is empty</p>
@@ -170,14 +228,14 @@ const CheckoutPage = () => {
   }
 
   const paymentMethods = [
-    { value: 'COD', label: 'Cash on Delivery', desc: 'Pay when your order arrives', icon: Banknote },
-    { value: 'ONLINE', label: 'Pay Online', desc: 'UPI, Cards, Net Banking via Razorpay', icon: Smartphone },
+    { value: 'COD', label: 'Cash on Delivery', desc: '3% COD charge applies', icon: Banknote },
+    { value: 'ONLINE', label: 'Pay Online', desc: 'UPI, Cards, Net Banking — No extra charge', icon: Smartphone },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="pt-24 pb-12">
+      <div className="pt-32 pb-12">
         <div className="max-w-5xl mx-auto px-4">
           {/* Back button */}
           <button onClick={() => navigate('/cart')} className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors">
@@ -185,7 +243,19 @@ const CheckoutPage = () => {
             Back to Cart
           </button>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Checkout</h1>
+
+          {/* Offers strip */}
+          <div className="flex flex-wrap gap-3 mb-8">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-full text-xs font-medium border border-green-200">
+              <Truck className="w-3.5 h-3.5" />
+              {isFreeShipping ? 'Free Shipping Unlocked!' : 'Free shipping on orders above ₹999'}
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 text-yellow-800 rounded-full text-xs font-medium border border-yellow-200">
+              <Tag className="w-3.5 h-3.5" />
+              Use code <span className="font-bold">SMILE</span> for 10% off
+            </span>
+          </div>
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
@@ -199,10 +269,29 @@ const CheckoutPage = () => {
               <div className="lg:col-span-2 space-y-6">
                 {/* Shipping Address */}
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-primary-600" />
-                    Shipping Address
-                  </h2>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                      <MapPin className="w-5 h-5 text-primary-600" />
+                      Shipping Address
+                    </h2>
+                    {savedAddress && (
+                      <button
+                        type="button"
+                        onClick={clearSavedAddress}
+                        className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        Use a different address
+                      </button>
+                    )}
+                  </div>
+
+                  {savedAddress && useSavedAddress && (
+                    <div className="bg-primary-50 border border-primary-200 rounded-lg p-3 mb-4 text-sm text-primary-800">
+                      <p className="font-medium text-xs text-primary-600 mb-1">Using saved address</p>
+                      <p>{savedAddress.shippingAddress}, {savedAddress.city}, {savedAddress.state} — {savedAddress.pincode}</p>
+                    </div>
+                  )}
+
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Full Address *</label>
@@ -310,12 +399,22 @@ const CheckoutPage = () => {
                       );
                     })}
                   </div>
+
+                  {form.paymentMethod === 'COD' && (
+                    <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
+                      <Info className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-xs text-amber-800">
+                        A COD handling charge of <strong>3% (minus ₹1)</strong> will be added to your order total.
+                        Pay online to avoid this charge.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Right: Order Summary */}
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-28">
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-36">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                     <ShoppingBag className="w-5 h-5 text-primary-600" />
                     Order Summary
@@ -350,12 +449,27 @@ const CheckoutPage = () => {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Shipping</span>
-                      <span className="text-green-600 font-medium">Free</span>
+                      {isFreeShipping ? (
+                        <span className="text-green-600 font-medium">Free</span>
+                      ) : (
+                        <span className="text-gray-900">₹0 <span className="text-green-600 text-xs">(Free)</span></span>
+                      )}
                     </div>
+                    {form.paymentMethod === 'COD' && codCharge > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">COD Charge (3%)</span>
+                        <span className="text-amber-600 font-medium">+₹{codCharge.toLocaleString('en-IN')}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3 mt-3">
                       <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">₹{subtotal.toLocaleString('en-IN')}</span>
+                      <span className="text-gray-900">₹{total.toLocaleString('en-IN')}</span>
                     </div>
+                    {form.paymentMethod === 'COD' && codCharge > 0 && (
+                      <p className="text-xs text-gray-500 text-right">
+                        Save ₹{codCharge.toLocaleString('en-IN')} by paying online
+                      </p>
+                    )}
                   </div>
 
                   <button
@@ -369,7 +483,7 @@ const CheckoutPage = () => {
                         {form.paymentMethod === 'COD' ? 'Placing Order...' : 'Processing...'}
                       </>
                     ) : form.paymentMethod === 'COD' ? (
-                      `Place Order • ₹${subtotal.toLocaleString('en-IN')}`
+                      `Place Order • ₹${total.toLocaleString('en-IN')}`
                     ) : (
                       `Pay Now • ₹${subtotal.toLocaleString('en-IN')}`
                     )}

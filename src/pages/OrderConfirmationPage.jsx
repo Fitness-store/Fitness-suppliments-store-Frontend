@@ -12,7 +12,7 @@ const OrderConfirmationPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="pt-24 pb-16">
+      <div className="pt-32 pb-16">
         <div className="max-w-lg mx-auto px-4">
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 text-center">
             {/* Success Icon */}

@@ -17,27 +17,45 @@ const ProductCard = ({ product }) => {
     navigate(`/product/${product.productId}`);
   };
 
+  const defaultVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
+
   const { 
     name, 
     brand, 
     description, 
-    mrp, 
-    finalPrice, 
     imageUrl,
-    stock,
     rating,
-    flavor,
-    netQuantity,
     isVegetarian,
     categoryName 
   } = product;
+
+  const {
+    flavor,
+    netQuantity,
+    mrp,
+    finalPrice,
+    stock
+  } = defaultVariant || {};
 
   const discount = mrp && finalPrice ? Math.round(((mrp - finalPrice) / mrp) * 100) : 0;
   const hasStock = stock > 0;
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
-    const result = await addToCart(product, 1);
+    if (!defaultVariant) {
+      setCartMessage('Product unavailable');
+      return;
+    }
+    const cartProduct = {
+      ...product,
+      variantId: defaultVariant.id,
+      flavor: defaultVariant.flavor,
+      netQuantity: defaultVariant.netQuantity,
+      mrp: defaultVariant.mrp,
+      finalPrice: defaultVariant.finalPrice,
+      stock: defaultVariant.stock
+    };
+    const result = await addToCart(cartProduct, 1);
     setCartMessage(result.message);
     setTimeout(() => setCartMessage(''), 2000);
   };

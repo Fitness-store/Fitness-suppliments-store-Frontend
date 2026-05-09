@@ -1,13 +1,15 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://fitness-supplements-store.onrender.com';
+const AUTH_FLAG_KEY = 'fitness_store_auth';
+// Keep TOKEN_KEY for backward compat during migration — will be removed once cookies are fully active
 const TOKEN_KEY = 'fitness_store_token';
 let accessToken = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
 let refreshPromise = null;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true,
+  withCredentials: true, // Sends cookies automatically on every request
   headers: {
     'Content-Type': 'application/json',
   },
@@ -19,8 +21,10 @@ export const setAccessToken = (token) => {
   if (typeof window !== 'undefined') {
     if (token) {
       localStorage.setItem(TOKEN_KEY, token);
+      localStorage.setItem(AUTH_FLAG_KEY, 'true');
     } else {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(AUTH_FLAG_KEY);
     }
   }
 };
@@ -31,7 +35,20 @@ export const clearAccessToken = () => {
   accessToken = null;
   if (typeof window !== 'undefined') {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(AUTH_FLAG_KEY);
   }
+};
+
+/**
+ * Returns true if the user may be authenticated (based on local flag).
+ * The actual auth is validated server-side via HttpOnly cookies.
+ */
+export const isAuthFlagSet = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem(AUTH_FLAG_KEY) === 'true' ||
+           localStorage.getItem(TOKEN_KEY) !== null;
+  }
+  return false;
 };
 
 const isAuthRefreshPath = (url = '') => url.includes('/fs/auth/refresh');
@@ -40,6 +57,7 @@ const isAuthActionPath = (url = '') =>
   url.includes('/fs/auth/login') ||
   url.includes('/fs/auth/signup');
 
+// Attach Authorization header if we have a token (backward compat + double security)
 api.interceptors.request.use(
   (config) => {
     if (accessToken) {

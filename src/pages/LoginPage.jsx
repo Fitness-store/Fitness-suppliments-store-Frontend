@@ -36,7 +36,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="pt-24 pb-12">
+      <div className="pt-32 pb-12">
         <div className="max-w-md mx-auto px-4">
           <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Login</h1>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package } from 'lucide-react';
+import OfferBanner from './OfferBanner';
 import { useAuth } from '../../context/useAuth';
 import { useCart } from '../../context/useCart';
 
@@ -104,8 +105,10 @@ const Navbar = () => {
   };
 
   return (
+    <>
+    <OfferBanner />
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-8 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? 'bg-navy-950/95 backdrop-blur-md shadow-lg py-3'
           : 'bg-transparent py-5'
@@ -317,6 +320,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
+    </>
   );
 };
 

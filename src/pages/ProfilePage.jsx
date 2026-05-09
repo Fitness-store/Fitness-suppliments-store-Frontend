@@ -18,7 +18,7 @@ const ProfilePage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12 px-4">
+        <div className="pt-32 pb-12 px-4">
           <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
             <p className="text-gray-600 mb-4">Please login to view your profile</p>
             <button
@@ -37,7 +37,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="pt-24 pb-12">
+      <div className="pt-32 pb-12">
         <div className="max-w-2xl mx-auto px-4">
           {/* Profile Header */}
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">

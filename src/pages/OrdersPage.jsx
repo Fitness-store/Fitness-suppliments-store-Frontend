@@ -44,7 +44,7 @@ const OrdersPage = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar />
-        <div className="pt-24 pb-12 px-4">
+        <div className="pt-32 pb-12 px-4">
           <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
             <Package className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">Please login to view your orders</p>
@@ -67,7 +67,7 @@ const OrdersPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="pt-24 pb-12">
+      <div className="pt-32 pb-12">
         <div className="max-w-3xl mx-auto px-4">
           {/* Header */}
           <div className="mb-8">

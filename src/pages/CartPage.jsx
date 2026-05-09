@@ -55,7 +55,7 @@ const CartPage = () => {
             <div className="space-y-6">
               <div className="space-y-4">
                 {cartItems.map((item) => (
-                  <div key={item.productId} className="bg-white rounded-xl border border-gray-200 p-4">
+                  <div key={item.variantId} className="bg-white rounded-xl border border-gray-200 p-4">
                     <div className="flex flex-col sm:flex-row gap-4">
                       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                         {item.imageUrl ? (
@@ -65,24 +65,25 @@ const CartPage = () => {
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{item.name}</h3>
                         <p className="text-sm text-gray-500">{item.brand}</p>
+                        {item.flavor && <p className="text-xs text-gray-400 mt-1">Flavor: {item.flavor} | Size: {item.netQuantity}</p>}
                         <p className="text-sm text-gray-700 mt-1">Rs {item.finalPrice?.toLocaleString()}</p>
                       </div>
                       <div className="flex items-center gap-3">
                         <button
-                          onClick={() => decrementQuantity(item.productId)}
+                          onClick={() => decrementQuantity(item.variantId)}
                           className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
                         <span className="w-8 text-center font-medium">{item.quantity}</span>
                         <button
-                          onClick={() => incrementQuantity(item.productId)}
+                          onClick={() => incrementQuantity(item.variantId)}
                           className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => removeFromCart(item.productId)}
+                          onClick={() => removeFromCart(item.variantId)}
                           className="p-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
                         >
                           <Trash2 className="w-4 h-4" />

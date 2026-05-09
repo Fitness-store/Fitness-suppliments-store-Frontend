@@ -51,8 +51,11 @@ export const CartProvider = ({ children }) => {
         if (response?.success && response?.items) {
           setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
+            variantId: item.variantId,
             name: item.name,
             brand: item.brand,
+            flavor: item.flavor,
+            netQuantity: item.netQuantity,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
             mrp: item.mrp,
@@ -70,8 +73,8 @@ export const CartProvider = ({ children }) => {
   }, [isAuthenticated]);
 
   const addToCart = useCallback(async (product, quantity = 1) => {
-    if (!product?.productId) {
-      return { added: false, message: 'Invalid product.' };
+    if (!product?.productId || !product?.variantId) {
+      return { added: false, message: 'Invalid product or variant.' };
     }
 
     const qtyToAdd = Math.max(1, Number(quantity) || 1);
@@ -80,7 +83,7 @@ export const CartProvider = ({ children }) => {
       try {
         setCartLoading(true);
         const response = await addCartItem({
-          productId: product.productId,
+          variantId: product.variantId,
           quantity: qtyToAdd,
         });
         if (response?.success) {
@@ -89,8 +92,11 @@ export const CartProvider = ({ children }) => {
           if (cartResponse?.success && cartResponse?.items) {
             setAuthCartItems(cartResponse.items.map(item => ({
               productId: item.productId,
+              variantId: item.variantId,
               name: item.name,
               brand: item.brand,
+              flavor: item.flavor,
+              netQuantity: item.netQuantity,
               imageUrl: item.imageUrl,
               finalPrice: item.finalPrice,
               mrp: item.mrp,
@@ -110,14 +116,17 @@ export const CartProvider = ({ children }) => {
 
     // Guest cart logic
     setGuestCartItems((prev) => {
-      const index = prev.findIndex((item) => item.productId === product.productId);
+      const index = prev.findIndex((item) => item.variantId === product.variantId);
       if (index === -1) {
         return [
           ...prev,
           {
             productId: product.productId,
+            variantId: product.variantId,
             name: product.name,
             brand: product.brand,
+            flavor: product.flavor,
+            netQuantity: product.netQuantity,
             imageUrl: product.imageUrl,
             finalPrice: product.finalPrice,
             mrp: product.mrp,
@@ -138,9 +147,9 @@ export const CartProvider = ({ children }) => {
     return { added: true, message: 'Added to cart.' };
   }, [isAuthenticated]);
 
-  const incrementQuantity = useCallback(async (productId) => {
+  const incrementQuantity = useCallback(async (variantId) => {
     if (isAuthenticated) {
-      const item = authCartItems.find(item => item.productId === productId);
+      const item = authCartItems.find(item => item.variantId === variantId);
       if (!item?.cartItemId) return;
       try {
         setCartLoading(true);
@@ -149,8 +158,11 @@ export const CartProvider = ({ children }) => {
         if (response?.success && response?.items) {
           setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
+            variantId: item.variantId,
             name: item.name,
             brand: item.brand,
+            flavor: item.flavor,
+            netQuantity: item.netQuantity,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
             mrp: item.mrp,
@@ -167,15 +179,15 @@ export const CartProvider = ({ children }) => {
     }
     // Guest cart
     setGuestCartItems((prev) => prev.map((item) => (
-      item.productId === productId
+      item.variantId === variantId
         ? { ...item, quantity: item.quantity + 1 }
         : item
     )));
   }, [isAuthenticated, authCartItems]);
 
-  const decrementQuantity = useCallback(async (productId) => {
+  const decrementQuantity = useCallback(async (variantId) => {
     if (isAuthenticated) {
-      const item = authCartItems.find(item => item.productId === productId);
+      const item = authCartItems.find(item => item.variantId === variantId);
       if (!item?.cartItemId || item.quantity <= 1) return;
       try {
         setCartLoading(true);
@@ -184,8 +196,11 @@ export const CartProvider = ({ children }) => {
         if (response?.success && response?.items) {
           setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
+            variantId: item.variantId,
             name: item.name,
             brand: item.brand,
+            flavor: item.flavor,
+            netQuantity: item.netQuantity,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
             mrp: item.mrp,
@@ -202,15 +217,15 @@ export const CartProvider = ({ children }) => {
     }
     // Guest cart
     setGuestCartItems((prev) => prev.map((item) => (
-      item.productId === productId
+      item.variantId === variantId
         ? { ...item, quantity: Math.max(1, item.quantity - 1) }
         : item
     )));
   }, [isAuthenticated, authCartItems]);
 
-  const removeFromCart = useCallback(async (productId) => {
+  const removeFromCart = useCallback(async (variantId) => {
     if (isAuthenticated) {
-      const item = authCartItems.find(item => item.productId === productId);
+      const item = authCartItems.find(item => item.variantId === variantId);
       if (!item?.cartItemId) return;
       try {
         setCartLoading(true);
@@ -219,8 +234,11 @@ export const CartProvider = ({ children }) => {
         if (response?.success && response?.items) {
           setAuthCartItems(response.items.map(item => ({
             productId: item.productId,
+            variantId: item.variantId,
             name: item.name,
             brand: item.brand,
+            flavor: item.flavor,
+            netQuantity: item.netQuantity,
             imageUrl: item.imageUrl,
             finalPrice: item.finalPrice,
             mrp: item.mrp,
@@ -238,7 +256,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     // Guest cart
-    setGuestCartItems((prev) => prev.filter((item) => item.productId !== productId));
+    setGuestCartItems((prev) => prev.filter((item) => item.variantId !== variantId));
   }, [isAuthenticated, authCartItems]);
 
   const clearCart = useCallback(async () => {

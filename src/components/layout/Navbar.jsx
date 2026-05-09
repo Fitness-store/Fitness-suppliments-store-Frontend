@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package } from 'lucide-react';
@@ -9,6 +9,9 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+  const searchInputRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, currentUser } = useAuth();
@@ -32,6 +35,24 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
+  // Close search on Escape
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setIsSearchOpen(false);
+    };
+    if (isSearchOpen) {
+      document.addEventListener('keydown', handleEsc);
+      return () => document.removeEventListener('keydown', handleEsc);
+    }
+  }, [isSearchOpen]);
 
   const navLinks = [
     { name: 'Home', href: '#', type: 'scroll' },
@@ -60,6 +81,26 @@ const Navbar = () => {
       }
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const trimmed = searchInput.trim();
+    if (trimmed) {
+      navigate(`/products?search=${encodeURIComponent(trimmed)}`);
+    } else {
+      navigate('/products');
+    }
+    setIsSearchOpen(false);
+    setSearchInput('');
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
+    if (isSearchOpen) {
+      setSearchInput('');
+    }
   };
 
   return (
@@ -95,8 +136,12 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <button className="p-2 text-gray-300 hover:text-white transition-colors">
-              <Search className="w-5 h-5" />
+            <button
+              onClick={toggleSearch}
+              className="p-2 text-gray-300 hover:text-white transition-colors"
+              aria-label="Toggle search"
+            >
+              {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
             </button>
             <button
               onClick={() => navigate('/cart')}
@@ -161,10 +206,66 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Search Bar (slides down) */}
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            isSearchOpen ? 'max-h-20 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
+          }`}
+        >
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <div className="flex items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden">
+              <Search className="w-5 h-5 text-gray-400 ml-4 flex-shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search for products, brands, supplements..."
+                className="w-full px-4 py-3 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm"
+              />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={() => setSearchInput('')}
+                  className="p-2 text-gray-400 hover:text-white transition-colors mr-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="px-5 py-3 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+        </div>
+
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-800">
             <div className="flex flex-col gap-4 pt-4">
+              {/* Mobile Search */}
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <div className="flex items-center bg-white/10 border border-white/20 rounded-xl overflow-hidden">
+                  <Search className="w-5 h-5 text-gray-400 ml-3 flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full px-3 py-2.5 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm"
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2.5 bg-primary-600 text-white text-sm font-medium"
+                  >
+                    Go
+                  </button>
+                </div>
+              </form>
+
               {navLinks.map((link) => (
                 <button
                   key={link.name}
@@ -191,9 +292,6 @@ const Navbar = () => {
                 </>
               )}
               <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
-                <button className="p-2 text-gray-300 hover:text-white transition-colors">
-                  <Search className="w-5 h-5" />
-                </button>
                 <button
                   onClick={() => navigate('/cart')}
                   className="p-2 text-gray-300 hover:text-white transition-colors relative"

@@ -13,7 +13,7 @@ const ProductsPage = () => {
   const [categories, setCategories] = useState([{ id: '', name: 'All Categories' }]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
@@ -64,8 +64,12 @@ const ProductsPage = () => {
 
   useEffect(() => {
     const category = searchParams.get('category');
+    const search = searchParams.get('search');
     if (category) {
       setSelectedCategory(category);
+    }
+    if (search !== null) {
+      setSearchQuery(search);
     }
   }, [searchParams]);
 

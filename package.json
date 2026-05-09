@@ -1,7 +1,7 @@
 {
   "name": "fitness-suppliments-store-frontend",
   "private": true,
-  "version": "1.0.0.9",
+  "version": "1.0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

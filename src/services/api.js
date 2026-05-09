@@ -229,6 +229,15 @@ export const placeOrder = async (payload) => {
   }
 };
 
+export const fetchMyOrders = async () => {
+  try {
+    const response = await api.get('/fs/order/my-orders');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch orders');
+  }
+};
+
 export const addCartItem = async (payload) => {
   try {
     const response = await api.post('/fs/cart/items', payload);

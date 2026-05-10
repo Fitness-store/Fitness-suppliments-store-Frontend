@@ -37,7 +37,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div style={{ background: '#09090b', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--bg-base)', minHeight: '100vh' }}>
       {/* Navigation */}
       <Navbar />
       

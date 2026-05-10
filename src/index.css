@@ -5,6 +5,17 @@
 @tailwind utilities;
 
 /* ===== THEME VARIABLES ===== */
+
+/* Shared semantic variables (same in both themes) */
+:root {
+  --accent-gold:   #e4b94a;
+  --accent-orange: #f97316;
+  --accent-grad:   linear-gradient(135deg, #e4b94a, #f97316);
+  --status-green:  #34d399;
+  --status-red:    #ef4444;
+  --status-blue:   #60a5fa;
+}
+
 :root, [data-theme="dark"] {
   --bg-base:       #09090b;
   --bg-card:       #18181b;

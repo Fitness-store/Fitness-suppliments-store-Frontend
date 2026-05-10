@@ -120,11 +120,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Dumbbell className="w-6 h-6 text-white" />
+          <a href="#" className="flex items-center gap-2 group" onClick={() => navigate('/')}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: 'var(--accent-gold)' }}>
+              <Dumbbell className="w-6 h-6" style={{ color: '#09090b' }} />
             </div>
-            <span className="text-2xl font-bold text-white">IronCore</span>
+            <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>IronCore</span>
           </a>
 
           {/* Desktop Navigation */}
@@ -133,7 +133,10 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => handleNavigation(link)}
-                className="text-gray-300 hover:text-white font-medium transition-colors"
+                className="font-medium transition-colors hover:opacity-100"
+                style={{ color: 'var(--text-secondary)' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
               >
                 {link.name}
               </button>
@@ -226,7 +229,8 @@ const Navbar = () => {
             {!isAuthenticated && (
               <button
                 onClick={() => navigate('/login')}
-                className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                className="px-3 py-2 text-sm font-semibold rounded-lg transition-colors"
+                style={{ background: 'var(--accent-gold)', color: '#09090b' }}
               >
                 Login
               </button>
@@ -236,7 +240,8 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-white"
+            className="md:hidden p-2 transition-colors"
+            style={{ color: 'var(--text-primary)' }}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -280,22 +285,30 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-800">
+          <div
+            className="md:hidden mt-4 pb-4"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
             <div className="flex flex-col gap-4 pt-4">
               {/* Mobile Search */}
               <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="flex items-center bg-white/10 border border-white/20 rounded-xl overflow-hidden">
-                  <Search className="w-5 h-5 text-gray-400 ml-3 flex-shrink-0" />
+                <div
+                  className="flex items-center rounded-xl overflow-hidden"
+                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
+                >
+                  <Search className="w-5 h-5 ml-3 flex-shrink-0" style={{ color: 'var(--text-muted)' }} />
                   <input
                     type="text"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     placeholder="Search products..."
-                    className="w-full px-3 py-2.5 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm"
+                    className="w-full px-3 py-2.5 bg-transparent focus:outline-none text-sm"
+                    style={{ color: 'var(--text-primary)' }}
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2.5 bg-primary-600 text-white text-sm font-medium"
+                    className="px-4 py-2.5 text-sm font-semibold"
+                    style={{ background: 'var(--accent-gold)', color: '#09090b' }}
                   >
                     Go
                   </button>
@@ -306,7 +319,8 @@ const Navbar = () => {
                 <button
                   key={link.name}
                   onClick={() => handleNavigation(link)}
-                  className="text-gray-300 hover:text-white font-medium transition-colors text-left"
+                  className="font-medium transition-colors text-left"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   {link.name}
                 </button>
@@ -315,26 +329,30 @@ const Navbar = () => {
                 <>
                   <button
                     onClick={() => { navigate('/orders'); setIsMobileMenuOpen(false); }}
-                    className="text-gray-300 hover:text-white font-medium transition-colors text-left"
+                    className="font-medium transition-colors text-left"
+                    style={{ color: 'var(--text-secondary)' }}
                   >
                     My Orders
                   </button>
                   <button
                     onClick={() => { navigate('/profile'); setIsMobileMenuOpen(false); }}
-                    className="text-gray-300 hover:text-white font-medium transition-colors text-left"
+                    className="font-medium transition-colors text-left"
+                    style={{ color: 'var(--text-secondary)' }}
                   >
                     Profile
                   </button>
                 </>
               )}
-              <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+              <div className="flex items-center gap-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                 <button
                   onClick={() => navigate('/cart')}
-                  className="p-2 text-gray-300 hover:text-white transition-colors relative"
+                  className="p-2 transition-colors relative"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 text-xs rounded-full flex items-center justify-center"
+                      style={{ background: 'var(--accent-gold)', color: '#09090b', fontWeight: 700 }}>
                       {cartCount}
                     </span>
                   )}
@@ -342,11 +360,21 @@ const Navbar = () => {
                 {!isAuthenticated && (
                   <button
                     onClick={() => navigate('/login')}
-                    className="px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                    className="px-3 py-2 text-sm font-semibold rounded-lg"
+                    style={{ background: 'var(--accent-gold)', color: '#09090b' }}
                   >
                     Login
                   </button>
                 )}
+                {/* Mobile Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg transition-all ml-auto"
+                  style={{ color: 'var(--text-secondary)' }}
+                  aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                  {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </button>
               </div>
             </div>
           </div>

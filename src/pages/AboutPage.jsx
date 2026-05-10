@@ -10,7 +10,7 @@ const AboutPage = () => {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-36 pb-20 lg:pt-44 lg:pb-28 overflow-hidden">
+      <section className="relative pt-28 sm:pt-36 pb-14 sm:pb-20 lg:pt-44 lg:pb-28 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(228,185,74,0.06) 0%, transparent 60%)' }} />
         <div className="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-8" style={{ background: 'radial-gradient(circle, var(--accent-gold), transparent 70%)' }} />
@@ -22,20 +22,20 @@ const AboutPage = () => {
             <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>Our Story</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight max-w-4xl mx-auto" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight max-w-4xl mx-auto" style={{ color: 'var(--text-primary)' }}>
             Engineered for the Elite.
             <br />
             <span className="text-gradient">Built on Absolute Trust.</span>
           </h1>
           
-          <p className="text-lg lg:text-xl max-w-2xl mx-auto mb-10" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto mb-8 sm:mb-10" style={{ color: 'var(--text-secondary)' }}>
             No hidden blends. No compromised ingredients. Just pure, lab-tested performance from IronCore.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl text-sm sm:text-base"
               style={{ background: 'var(--accent-grad)', color: '#09090b' }}
             >
               Shop Now
@@ -43,7 +43,7 @@ const AboutPage = () => {
             </Link>
             <Link
               to="/"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 sm:px-8 sm:py-4 font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-105 text-sm sm:text-base"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-hover)', color: 'var(--text-primary)' }}
             >
               Back to Home

@@ -97,9 +97,10 @@
   }
   
   .btn-primary {
-    @apply px-8 py-4 text-white font-semibold rounded-xl 
+    @apply px-5 py-3 sm:px-8 sm:py-4 text-white font-semibold rounded-xl 
            transition-all duration-300 transform hover:scale-105 hover:shadow-lg 
-           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900;
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900
+           text-sm sm:text-base;
     background: linear-gradient(135deg, #e4b94a, #f97316);
     box-shadow: 0 0 24px rgba(228, 185, 74, 0.25);
   }
@@ -109,8 +110,9 @@
   }
   
   .btn-secondary {
-    @apply px-8 py-4 font-semibold rounded-xl 
-           border transition-all duration-300 transform hover:scale-105;
+    @apply px-5 py-3 sm:px-8 sm:py-4 font-semibold rounded-xl 
+           border transition-all duration-300 transform hover:scale-105
+           text-sm sm:text-base;
     color: var(--text-primary);
     border-color: var(--border-hover);
     background: var(--bg-card);
@@ -131,8 +133,13 @@
 
   .product-card:hover {
     border-color: rgba(228, 185, 74, 0.35);
-    transform: translateY(-6px);
     box-shadow: 0 24px 64px rgba(0,0,0,0.15), 0 0 0 1px rgba(228, 185, 74, 0.15);
+  }
+
+  @media (min-width: 640px) {
+    .product-card:hover {
+      transform: translateY(-6px);
+    }
   }
   
   .skeleton {

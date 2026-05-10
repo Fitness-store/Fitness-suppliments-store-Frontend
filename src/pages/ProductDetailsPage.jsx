@@ -90,11 +90,11 @@ const ProductDetailsPage = () => {
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
         <Navbar />
-        <div className="pt-36 pb-12">
+        <div className="pt-28 sm:pt-36 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse">
               <div className="h-8 w-32 rounded mb-8" style={{ background: 'var(--bg-subtle)' }} />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-12">
                 <div className="aspect-square rounded-2xl" style={{ background: 'var(--bg-subtle)' }} />
                 <div className="space-y-4">
                   <div className="h-8 w-3/4 rounded" style={{ background: 'var(--bg-subtle)' }} />
@@ -142,7 +142,7 @@ const ProductDetailsPage = () => {
     <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
       
-      <div className="pt-36 pb-12">
+      <div className="pt-28 sm:pt-36 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>

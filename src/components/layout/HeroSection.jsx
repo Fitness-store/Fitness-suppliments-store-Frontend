@@ -131,7 +131,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center">
-        <div className="max-w-7xl mx-auto w-full px-6 lg:px-12 pt-36 pb-24">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-12 pt-28 sm:pt-36 pb-16 sm:pb-24">
           <div className="max-w-3xl">
             {/* Eyebrow */}
             <div
@@ -150,17 +150,17 @@ const HeroSection = () => {
               className={`transition-all duration-400 ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}
               style={{ transition: 'opacity 0.4s ease, transform 0.4s ease' }}
             >
-              <h1 className="section-heading text-6xl sm:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight text-white mb-6">
+              <h1 className="section-heading text-4xl sm:text-6xl lg:text-8xl font-black leading-[0.9] tracking-tight text-white mb-4 sm:mb-6">
                 {slide.title}
                 <br />
                 <span className="text-gradient">{slide.highlight}</span>
               </h1>
-              <p className="text-lg sm:text-xl text-zinc-400 max-w-xl leading-relaxed mb-10 text-balance">
+              <p className="text-base sm:text-lg lg:text-xl text-zinc-400 max-w-xl leading-relaxed mb-6 sm:mb-10 text-balance">
                 {slide.subtitle}
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-4 mb-16">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-10 sm:mb-16">
                 <button
                   onClick={() => navigate(slide.ctaLink)}
                   className="group btn-primary inline-flex items-center gap-3"
@@ -180,12 +180,12 @@ const HeroSection = () => {
             {/* Stats Row */}
             <div
               key={`stats-${currentSlide}`}
-              className="animate-fade-up-delay-3 flex items-center gap-10 border-t border-white/10 pt-8"
+              className="animate-fade-up-delay-3 flex items-center gap-6 sm:gap-10 border-t border-white/10 pt-6 sm:pt-8"
             >
               {[slide.stat1, slide.stat2, slide.stat3].map((stat, i) => (
                 <div key={i} className="flex flex-col">
-                  <span className="text-2xl font-black text-white">{stat.value}</span>
-                  <span className="text-xs font-medium tracking-wider text-zinc-500 uppercase">{stat.label}</span>
+                  <span className="text-lg sm:text-2xl font-black text-white">{stat.value}</span>
+                  <span className="text-[10px] sm:text-xs font-medium tracking-wider text-zinc-500 uppercase">{stat.label}</span>
                 </div>
               ))}
             </div>
@@ -194,7 +194,7 @@ const HeroSection = () => {
       </div>
 
       {/* Slide Controls — Bottom bar */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 lg:px-12 pb-10 flex items-center justify-between">
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-12 pb-6 sm:pb-10 flex items-center justify-between">
         {/* Progress Indicators */}
         <div className="flex items-center gap-3">
           {slides.map((_, i) => (

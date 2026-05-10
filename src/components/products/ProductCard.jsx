@@ -90,18 +90,7 @@ const ProductCard = ({ product }) => {
           </div>
         )}
 
-        {/* Veg/Non-Veg Badge */}
-        {isVegetarian !== undefined && (
-          <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-sm ${
-            isVegetarian 
-              ? 'bg-green-100 border-green-600' 
-              : 'bg-red-100 border-red-600'
-          }`}>
-            <div className={`w-3 h-3 rounded-full ${
-              isVegetarian ? 'bg-green-600' : 'bg-red-600'
-            }`} />
-          </div>
-        )}
+
 
         {/* Quick Add Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">

@@ -40,7 +40,7 @@ const CheckoutPage = () => {
     state: '',
     pincode: '',
     phone: currentUser?.phone || '',
-    paymentMethod: 'COD',
+    paymentMethod: 'ONLINE',
   });
 
   // Auto-fill saved address

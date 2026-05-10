@@ -35,18 +35,18 @@ const CartPage = () => {
     <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
 
-      <div className="pt-36 pb-16">
+      <div className="pt-28 sm:pt-36 pb-12 sm:pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Your Cart</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Your Cart</h1>
             {cartItems.length > 0 && (
               <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>{itemCount} item{itemCount !== 1 ? 's' : ''} in your cart</p>
             )}
           </div>
 
           {cartItems.length === 0 ? (
-            <div className="rounded-2xl p-12 text-center" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            <div className="rounded-2xl p-8 sm:p-12 text-center" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
               <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center" style={{ background: 'rgba(228,185,74,0.1)' }}>
                 <ShoppingCart className="w-10 h-10" style={{ color: 'var(--accent-gold)' }} />
               </div>

@@ -145,7 +145,7 @@ const ProductsPage = () => {
       <Navbar />
       
       {/* Hero Header */}
-      <section className="relative pt-36 pb-16 overflow-hidden">
+      <section className="relative pt-28 sm:pt-36 pb-10 sm:pb-16 overflow-hidden">
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(228,185,74,0.06) 0%, transparent 100%)' }} />
         <div className="absolute top-20 left-1/4 w-72 h-72 rounded-full opacity-10" style={{ background: 'radial-gradient(circle, var(--accent-gold), transparent 70%)' }} />
         
@@ -154,10 +154,10 @@ const ProductsPage = () => {
             <Package className="w-4 h-4" style={{ color: 'var(--accent-gold)' }} />
             <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>Premium Collection</span>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
             All <span className="text-gradient">Products</span>
           </h1>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-base sm:text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
             Discover our premium range of fitness supplements, engineered for elite performance.
           </p>
         </div>

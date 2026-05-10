@@ -90,7 +90,7 @@ const ProductCard = ({ product }) => {
         )}
 
         {/* Add to Cart Overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+        <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 translate-y-0 sm:translate-y-full sm:group-hover:translate-y-0 transition-transform duration-300 ease-out">
           <button
             onClick={handleAddToCart}
             disabled={!hasStock || adding}
@@ -109,7 +109,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Content */}
-      <div className="p-5 flex-1 flex flex-col">
+      <div className="p-3 sm:p-5 flex-1 flex flex-col">
         {/* Brand */}
         {brand && (
           <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#e4b94a' }}>

@@ -143,10 +143,10 @@ const Navbar = () => {
     <>
     <OfferBanner />
     <nav
-      className={`fixed top-8 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md ${
+      className={`fixed top-7 sm:top-8 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md ${
         isScrolled
-          ? 'shadow-lg py-3'
-          : 'py-5'
+          ? 'shadow-lg py-2 sm:py-3'
+          : 'py-3 sm:py-5'
       }`}
       style={{ background: 'var(--nav-bg)', borderBottom: isScrolled ? '1px solid var(--nav-border)' : 'none' }}
     >
@@ -157,10 +157,10 @@ const Navbar = () => {
             onClick={() => navigate('/')}
             className="flex items-center gap-2 group"
           >
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: 'var(--accent-gold)' }}>
-              <Dumbbell className="w-6 h-6" style={{ color: '#09090b' }} />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: 'var(--accent-gold)' }}>
+              <Dumbbell className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#09090b' }} />
             </div>
-            <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>IronCore</span>
+            <span className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>IronCore</span>
           </button>
 
           {/* Desktop Navigation */}
@@ -336,14 +336,84 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 transition-colors"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Actions + Menu Button */}
+          <div className="flex md:hidden items-center gap-1">
+            {/* Mobile Cart */}
+            <button
+              onClick={() => navigate('/cart')}
+              className="p-2 transition-colors relative"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 text-[10px] rounded-full flex items-center justify-center font-bold"
+                  style={{ background: 'var(--accent-gold)', color: '#09090b' }}>
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Profile */}
+            {isAuthenticated ? (
+              <div className="profile-dropdown relative">
+                <button
+                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  className="p-2 transition-colors"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  <User className="w-5 h-5" />
+                </button>
+                {isProfileDropdownOpen && (
+                  <div
+                    className="absolute right-0 top-full mt-2 w-48 rounded-xl shadow-xl border py-2 z-50"
+                    style={{ background: 'var(--dropdown-bg)', borderColor: 'var(--border)' }}
+                  >
+                    <div className="px-4 py-2 mb-1" style={{ borderBottom: '1px solid var(--border)' }}>
+                      <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{currentUser?.fullName || 'User'}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{currentUser?.email || ''}</p>
+                    </div>
+                    <button
+                      onClick={() => { navigate('/orders'); setIsProfileDropdownOpen(false); }}
+                      className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--dropdown-hover)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Package className="w-4 h-4" />
+                      My Orders
+                    </button>
+                    <button
+                      onClick={() => { navigate('/profile'); setIsProfileDropdownOpen(false); }}
+                      className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--dropdown-hover)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <User className="w-4 h-4" />
+                      Profile
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors"
+                style={{ background: 'var(--accent-gold)', color: '#09090b' }}
+              >
+                Login
+              </button>
+            )}
+
+            {/* Hamburger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 transition-colors"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Search Bar (slides down) */}

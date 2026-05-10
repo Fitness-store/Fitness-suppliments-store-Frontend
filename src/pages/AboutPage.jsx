@@ -6,48 +6,45 @@ import { ShieldCheck, Eye, Zap, Check, ArrowRight, FlaskConical, Award, Users } 
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-navy-950 pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900/90 to-navy-800/50" />
+      <section className="relative pt-36 pb-20 lg:pt-44 lg:pb-28 overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(228,185,74,0.06) 0%, transparent 60%)' }} />
+        <div className="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-8" style={{ background: 'radial-gradient(circle, var(--accent-gold), transparent 70%)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--border), transparent)' }} />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/20 border border-primary-500/30 rounded-full mb-8">
-            <Award className="w-4 h-4 text-primary-400" />
-            <span className="text-primary-400 text-sm font-medium">Our Story</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: 'rgba(228,185,74,0.1)', border: '1px solid rgba(228,185,74,0.2)' }}>
+            <Award className="w-4 h-4" style={{ color: 'var(--accent-gold)' }} />
+            <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>Our Story</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight max-w-4xl mx-auto" style={{ color: 'var(--text-primary)' }}>
             Engineered for the Elite.
             <br />
             <span className="text-gradient">Built on Absolute Trust.</span>
           </h1>
           
-          <p className="text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+          <p className="text-lg lg:text-xl max-w-2xl mx-auto mb-10" style={{ color: 'var(--text-secondary)' }}>
             No hidden blends. No compromised ingredients. Just pure, lab-tested performance from IronCore.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              style={{ background: 'var(--accent-grad)', color: '#09090b' }}
             >
               Shop Now
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               to="/"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl border border-white/30 backdrop-blur-sm transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-105"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-hover)', color: 'var(--text-primary)' }}
             >
               Back to Home
             </Link>
@@ -56,30 +53,30 @@ const AboutPage = () => {
       </section>
 
       {/* Main Story - The "Why" Block */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left: Image/Visual */}
             <div className="relative">
-              <div className="aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-navy-900 to-navy-800">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-600/20 to-accent-orange/20" />
+              <div className="aspect-square lg:aspect-[4/3] rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(228,185,74,0.1), rgba(249,115,22,0.1))' }} />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center p-8">
-                    <FlaskConical className="w-24 h-24 text-primary-400 mx-auto mb-6" />
-                    <p className="text-white text-2xl font-bold">Radical Transparency</p>
+                    <FlaskConical className="w-24 h-24 mx-auto mb-6" style={{ color: 'var(--accent-gold)' }} />
+                    <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Radical Transparency</p>
                   </div>
                 </div>
               </div>
               
               {/* Floating Stats */}
-              <div className="absolute -bottom-6 -right-6 bg-white rounded-xl shadow-xl p-6 border border-gray-100">
+              <div className="absolute -bottom-6 -right-6 rounded-xl p-6" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                    <Check className="w-6 h-6 text-primary-600" />
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(228,185,74,0.15)' }}>
+                    <Check className="w-6 h-6" style={{ color: 'var(--accent-gold)' }} />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">100%</p>
-                    <p className="text-sm text-gray-600">Lab Tested</p>
+                    <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>100%</p>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Lab Tested</p>
                   </div>
                 </div>
               </div>
@@ -87,22 +84,22 @@ const AboutPage = () => {
             
             {/* Right: Story Content */}
             <div>
-              <span className="inline-block px-4 py-2 bg-navy-900/10 text-navy-900 font-medium text-sm rounded-full mb-6">
+              <span className="inline-block px-4 py-2 font-medium text-sm rounded-full mb-6" style={{ background: 'rgba(228,185,74,0.1)', color: 'var(--accent-gold)' }}>
                 The IronCore Origin
               </span>
               
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
                 We demanded better,
                 <br />
                 <span className="text-gradient">so we built it.</span>
               </h2>
               
-              <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
+              <div className="space-y-4 text-lg leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 <p>
                   The supplement industry is filled with noise—exaggerated claims, under-dosed formulas, and proprietary blends designed to hide the truth. We got tired of guessing what we were putting into our bodies.
                 </p>
                 <p>
-                  IronCore was founded on a singular, unbreakable rule: <strong className="text-gray-900">Radical Transparency.</strong> We believe that if you are putting in the work to build a monstrous physique and push your limits, your supplements should work just as hard.
+                  IronCore was founded on a singular, unbreakable rule: <strong style={{ color: 'var(--text-primary)' }}>Radical Transparency.</strong> We believe that if you are putting in the work to build a monstrous physique and push your limits, your supplements should work just as hard.
                 </p>
                 <p>
                   We source only the highest-grade raw materials, dose them at clinical levels, and test them rigorously. What is on the label is exactly what is in the scoop. Nothing more, nothing less.
@@ -114,109 +111,91 @@ const AboutPage = () => {
       </section>
 
       {/* Core Pillars - 3 Column Feature Grid */}
-      <section className="py-20 lg:py-28 bg-gray-50">
+      <section className="py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-2 bg-primary-100 text-primary-700 font-medium text-sm rounded-full mb-4">
+            <span className="inline-block px-4 py-2 font-medium text-sm rounded-full mb-4" style={{ background: 'rgba(228,185,74,0.1)', color: 'var(--accent-gold)' }}>
               Our Foundation
             </span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
               The Three Pillars of <span className="text-gradient">IronCore</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
               Everything we do is guided by these unwavering principles
             </p>
           </div>
 
           {/* Feature Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Pillar 1: Quality */}
-            <div className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <ShieldCheck className="w-8 h-8 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Uncompromising Quality
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                We don't cut corners. Every batch of IronCore is rigorously tested for purity, potency, and safety. We use premium, bioavailable ingredients that your body can actually absorb and utilize, ensuring a rock-solid foundation for your heavy training.
-              </p>
-            </div>
-
-            {/* Pillar 2: Transparency */}
-            <div className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Eye className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                100% Label Transparency
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Trust is earned, not given. We have completely banned "proprietary blends" from our manufacturing process. Every single ingredient and its exact dosage is clearly listed on every IronCore tub. You will always know exactly what fuels your performance.
-              </p>
-            </div>
-
-            {/* Pillar 3: Performance */}
-            <div className="group bg-white rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
-              <div className="w-16 h-16 bg-accent-orange/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Zap className="w-8 h-8 text-accent-orange" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Unleashed Performance
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Our formulas are not designed for the average. They are precision-engineered for those who demand monster performance. With clinical dosages backed by hard science, IronCore provides the exact fuel needed to break plateaus and dominate every session.
-              </p>
-            </div>
+            {[
+              { icon: ShieldCheck, title: 'Uncompromising Quality', desc: "We don't cut corners. Every batch of IronCore is rigorously tested for purity, potency, and safety. We use premium, bioavailable ingredients that your body can actually absorb and utilize, ensuring a rock-solid foundation for your heavy training.", color: 'var(--accent-gold)' },
+              { icon: Eye, title: '100% Label Transparency', desc: 'Trust is earned, not given. We have completely banned "proprietary blends" from our manufacturing process. Every single ingredient and its exact dosage is clearly listed on every IronCore tub. You will always know exactly what fuels your performance.', color: 'var(--status-blue)' },
+              { icon: Zap, title: 'Unleashed Performance', desc: 'Our formulas are not designed for the average. They are precision-engineered for those who demand monster performance. With clinical dosages backed by hard science, IronCore provides the exact fuel needed to break plateaus and dominate every session.', color: 'var(--accent-orange)' },
+            ].map((pillar, i) => {
+              const Icon = pillar.icon;
+              return (
+                <div
+                  key={i}
+                  className="group rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2"
+                  style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}
+                >
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300" style={{ background: `${pillar.color}15` }}>
+                    <Icon className="w-8 h-8" style={{ color: pillar.color }} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                    {pillar.title}
+                  </h3>
+                  <p className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    {pillar.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Trust Indicators */}
-      <section className="py-16 bg-navy-900">
+      <section className="py-16" style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="text-4xl font-bold text-white mb-2">50+</p>
-              <p className="text-gray-400">Premium Products</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-white mb-2">100K+</p>
-              <p className="text-gray-400">Athletes Served</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-white mb-2">99.9%</p>
-              <p className="text-gray-400">Purity Rate</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold text-white mb-2">4.9★</p>
-              <p className="text-gray-400">Customer Rating</p>
-            </div>
+            {[
+              { value: '50+', label: 'Premium Products' },
+              { value: '100K+', label: 'Athletes Served' },
+              { value: '99.9%', label: 'Purity Rate' },
+              { value: '4.9★', label: 'Customer Rating' },
+            ].map((stat, i) => (
+              <div key={i}>
+                <p className="text-4xl font-bold mb-2 text-gradient">{stat.value}</p>
+                <p style={{ color: 'var(--text-secondary)' }}>{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Closing CTA */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-20 lg:py-28">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-700 rounded-full mb-6">
-            <Users className="w-4 h-4" />
-            <span className="font-medium text-sm">Join the IronCore Family</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style={{ background: 'rgba(228,185,74,0.1)', border: '1px solid rgba(228,185,74,0.2)' }}>
+            <Users className="w-4 h-4" style={{ color: 'var(--accent-gold)' }} />
+            <span className="font-medium text-sm" style={{ color: 'var(--accent-gold)' }}>Join the IronCore Family</span>
           </div>
           
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-6" style={{ color: 'var(--text-primary)' }}>
             The IronCore Promise
           </h2>
           
-          <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
+          <p className="text-lg leading-relaxed mb-8 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
             We are not just a supplement company; we are athletes, lifters, and engineers of human performance. We pledge to never sell you a product we wouldn't take ourselves. When you choose IronCore, you are choosing a partner in your relentless pursuit of greatness.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+              style={{ background: 'var(--accent-grad)', color: '#09090b' }}
             >
               Explore Products
               <ArrowRight className="w-5 h-5" />

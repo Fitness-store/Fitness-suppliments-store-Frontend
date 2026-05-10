@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import LandingPage from './pages/LandingPage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
@@ -26,6 +27,7 @@ import AdminsPage from './pages/admin/AdminsPage';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         {/* Customer routes */}
         <Route path="/" element={<LandingPage />} />

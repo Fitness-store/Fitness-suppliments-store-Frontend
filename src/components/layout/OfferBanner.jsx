@@ -12,7 +12,7 @@ const OfferBanner = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-primary-700 via-primary-600 to-primary-700 overflow-hidden">
+    <div className="fixed top-0 left-0 right-0 z-[60] overflow-hidden" style={{ background: '#09090b', borderBottom: '1px solid rgba(228,185,74,0.15)' }}>
       <div
         className="flex items-center gap-12 py-2 px-4 whitespace-nowrap animate-marquee cursor-pointer"
         onClick={() => navigate('/checkout')}

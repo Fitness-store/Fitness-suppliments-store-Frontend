@@ -206,6 +206,15 @@ export const loginUser = async (payload) => {
   }
 };
 
+export const googleLoginUser = async (credential) => {
+  try {
+    const response = await api.post('/fs/auth/google', { credential });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Google login failed');
+  }
+};
+
 export const refreshAuthSession = async () => {
   try {
     const response = await api.post('/fs/auth/refresh');

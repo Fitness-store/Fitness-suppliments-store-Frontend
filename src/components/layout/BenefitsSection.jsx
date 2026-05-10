@@ -7,42 +7,42 @@ const benefits = [
     title: 'Lab Tested',
     description: 'Every batch is independently tested in NABL-certified labs for purity, potency, and safety.',
     accent: '#60a5fa',
-    glow: 'rgba(96,165,250,0.12)',
+    glow: 'rgba(96,165,250,0.10)',
   },
   {
     icon: ShieldCheck,
     title: '100% Authentic',
     description: 'We source directly from authorized brand distributors. Zero compromise on authenticity.',
     accent: '#34d399',
-    glow: 'rgba(52,211,153,0.12)',
+    glow: 'rgba(52,211,153,0.10)',
   },
   {
     icon: Truck,
     title: 'Fast Shipping',
     description: 'Free delivery on orders above ₹999. 24-72 hour dispatch across India.',
     accent: '#a78bfa',
-    glow: 'rgba(167,139,250,0.12)',
+    glow: 'rgba(167,139,250,0.10)',
   },
   {
     icon: Headphones,
     title: 'Expert Support',
     description: 'Real advice from certified sports nutritionists — not bots, not scripts.',
     accent: '#f97316',
-    glow: 'rgba(249,115,22,0.12)',
+    glow: 'rgba(249,115,22,0.10)',
   },
   {
     icon: RotateCcw,
     title: 'Easy Returns',
     description: '7-day no-questions-asked return policy on all sealed, unused products.',
     accent: '#f472b6',
-    glow: 'rgba(244,114,182,0.12)',
+    glow: 'rgba(244,114,182,0.10)',
   },
   {
     icon: BadgeCheck,
     title: 'Best Price',
-    description: 'Found it cheaper? We\'ll match any authorised retailer\'s price — guaranteed.',
+    description: "Found it cheaper? We'll match any authorised retailer's price — guaranteed.",
     accent: '#e4b94a',
-    glow: 'rgba(228,185,74,0.12)',
+    glow: 'rgba(228,185,74,0.10)',
   },
 ];
 
@@ -68,21 +68,22 @@ const BenefitCard = ({ icon: Icon, title, description, accent, glow, index }) =>
   return (
     <div
       ref={ref}
-      className="group relative p-7 rounded-2xl transition-all duration-500 cursor-default"
+      className="group relative p-7 rounded-2xl transition-all duration-300 cursor-default"
       style={{
-        background: '#18181b',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-card)',
         opacity: inView ? 1 : 0,
         transform: inView ? 'translateY(0)' : 'translateY(32px)',
         transition: `opacity 0.7s ease ${index * 0.08}s, transform 0.7s ease ${index * 0.08}s, box-shadow 0.3s ease, border-color 0.3s ease`,
       }}
       onMouseEnter={e => {
         e.currentTarget.style.borderColor = accent + '44';
-        e.currentTarget.style.boxShadow = `0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px ${accent}22, inset 0 1px 0 ${accent}11`;
+        e.currentTarget.style.boxShadow = `0 24px 48px rgba(0,0,0,0.12), 0 0 0 1px ${accent}22`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
-        e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
       }}
     >
       {/* Glow blob */}
@@ -99,8 +100,8 @@ const BenefitCard = ({ icon: Icon, title, description, accent, glow, index }) =>
         <Icon className="w-6 h-6" style={{ color: accent }} />
       </div>
 
-      <h3 className="font-bold text-white text-lg mb-2">{title}</h3>
-      <p className="text-zinc-500 text-sm leading-relaxed">{description}</p>
+      <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--text-primary)' }}>{title}</h3>
+      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{description}</p>
     </div>
   );
 };
@@ -110,14 +111,14 @@ const BenefitsSection = () => {
   const inView = useInView(sectionRef);
 
   return (
-    <section className="py-28 relative overflow-hidden" style={{ background: '#09090b' }}>
+    <section className="py-28 relative overflow-hidden" style={{ background: 'var(--bg-base)' }}>
       {/* Grid pattern */}
       <div className="absolute inset-0 grid-pattern" />
 
       {/* Glow top */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(228,185,74,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }}
+        style={{ background: 'radial-gradient(ellipse, rgba(228,185,74,0.05) 0%, transparent 70%)', filter: 'blur(60px)' }}
       />
 
       <div ref={sectionRef} className="relative max-w-7xl mx-auto px-6 lg:px-12">
@@ -134,12 +135,12 @@ const BenefitsSection = () => {
             <span className="w-8 h-px" style={{ background: 'linear-gradient(90deg, #e4b94a, transparent)' }} />
           </div>
 
-          <h2 className="section-heading text-5xl sm:text-6xl font-black text-white leading-tight mb-6">
+          <h2 className="section-heading text-5xl sm:text-6xl font-black leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
             The <span className="text-gradient">IronCore</span>
             <br />
             Advantage
           </h2>
-          <p className="text-zinc-500 text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg max-w-xl mx-auto leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             Trusted by 50,000+ athletes across India who demand nothing but the best.
           </p>
         </div>
@@ -151,12 +152,12 @@ const BenefitsSection = () => {
           ))}
         </div>
 
-        {/* Certifications scrolling strip */}
+        {/* Certifications strip */}
         <div
           className="mt-20 rounded-2xl overflow-hidden"
           style={{
-            background: '#18181b',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
             opacity: inView ? 1 : 0,
             transform: inView ? 'translateY(0)' : 'translateY(24px)',
             transition: 'all 0.8s ease 0.5s',
@@ -167,10 +168,10 @@ const BenefitsSection = () => {
               <React.Fragment key={cert}>
                 <div className="flex items-center gap-2">
                   <BadgeCheck className="w-4 h-4" style={{ color: '#e4b94a' }} />
-                  <span className="text-sm font-semibold text-zinc-400">{cert}</span>
+                  <span className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>{cert}</span>
                 </div>
                 {i < certifications.length - 1 && (
-                  <div className="hidden sm:block w-px h-5 bg-white/10" />
+                  <div className="hidden sm:block w-px h-5" style={{ background: 'var(--border)' }} />
                 )}
               </React.Fragment>
             ))}

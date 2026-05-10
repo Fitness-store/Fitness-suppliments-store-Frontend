@@ -4,8 +4,6 @@ import ProductCard from './ProductCard';
 import ProductCardSkeleton from './ProductCardSkeleton';
 import { AlertCircle, RefreshCw, Package, ArrowRight } from 'lucide-react';
 
-const sectionBg = { background: '#09090b' };
-
 const SkeletonBlock = () => (
   <div className="h-6 rounded-lg" style={{ background: '#27272a', animation: 'pulse 2s infinite' }} />
 );

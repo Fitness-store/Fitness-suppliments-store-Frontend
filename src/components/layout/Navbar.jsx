@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package } from 'lucide-react';
+import { Dumbbell, Menu, X, ShoppingCart, User, Search, ChevronDown, Package, Sun, Moon } from 'lucide-react';
 import OfferBanner from './OfferBanner';
 import { useAuth } from '../../context/useAuth';
 import { useCart } from '../../context/useCart';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,6 +18,7 @@ const Navbar = () => {
   const location = useLocation();
   const { isAuthenticated, currentUser } = useAuth();
   const { cartCount } = useCart();
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -110,9 +112,10 @@ const Navbar = () => {
     <nav
       className={`fixed top-8 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-navy-950/95 backdrop-blur-md shadow-lg py-3'
+          ? 'backdrop-blur-md shadow-lg py-3'
           : 'bg-transparent py-5'
       }`}
+      style={isScrolled ? { background: 'var(--nav-bg)', borderBottom: '1px solid var(--nav-border)' } : {}}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
@@ -138,17 +141,37 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg transition-all duration-300 hover:scale-110"
+              style={{ color: 'var(--text-secondary)' }}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              <div className="relative w-5 h-5">
+                <Sun
+                  className="absolute inset-0 w-5 h-5 transition-all duration-300"
+                  style={{ opacity: isDark ? 0 : 1, transform: isDark ? 'rotate(90deg) scale(0.5)' : 'rotate(0deg) scale(1)' }}
+                />
+                <Moon
+                  className="absolute inset-0 w-5 h-5 transition-all duration-300"
+                  style={{ opacity: isDark ? 1 : 0, transform: isDark ? 'rotate(0deg) scale(1)' : 'rotate(-90deg) scale(0.5)' }}
+                />
+              </div>
+            </button>
             <button
               onClick={toggleSearch}
-              className="p-2 text-gray-300 hover:text-white transition-colors"
+              className="p-2 transition-colors"
+              style={{ color: 'var(--text-secondary)' }}
               aria-label="Toggle search"
             >
               {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
             </button>
             <button
               onClick={() => navigate('/cart')}
-              className="p-2 text-gray-300 hover:text-white transition-colors relative"
+              className="p-2 transition-colors relative"
+              style={{ color: 'var(--text-secondary)' }}
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
@@ -161,27 +184,37 @@ const Navbar = () => {
               <div className="profile-dropdown relative">
                 <button 
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center gap-1 p-2 text-gray-300 hover:text-white transition-colors"
+                  className="flex items-center gap-1 p-2 transition-colors"
+                  style={{ color: 'var(--text-secondary)' }}
                 >
                   <User className="w-5 h-5" />
                   <ChevronDown className={`w-4 h-4 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isProfileDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-medium text-gray-900">{currentUser?.fullName || 'User'}</p>
-                      <p className="text-xs text-gray-500">{currentUser?.email || ''}</p>
+                  <div
+                    className="absolute right-0 top-full mt-2 w-48 rounded-xl shadow-xl border py-2 z-50"
+                    style={{ background: 'var(--dropdown-bg)', borderColor: 'var(--border)' }}
+                  >
+                    <div className="px-4 py-2 mb-1" style={{ borderBottom: '1px solid var(--border)' }}>
+                      <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{currentUser?.fullName || 'User'}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{currentUser?.email || ''}</p>
                     </div>
                     <button
                       onClick={() => { navigate('/orders'); setIsProfileDropdownOpen(false); }}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--dropdown-hover)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                     >
                       <Package className="w-4 h-4" />
                       My Orders
                     </button>
                     <button
                       onClick={() => { navigate('/profile'); setIsProfileDropdownOpen(false); }}
-                      className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      className="w-full px-4 py-2 text-left text-sm flex items-center gap-2 transition-colors"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--dropdown-hover)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                     >
                       <User className="w-4 h-4" />
                       Profile

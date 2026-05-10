@@ -6,6 +6,7 @@ import OfferBanner from './OfferBanner';
 import { useAuth } from '../../context/useAuth';
 import { useCart } from '../../context/useCart';
 import { ThemeContext } from '../../context/ThemeContext';
+import { fetchCategories } from '../../services/api';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -13,12 +14,31 @@ const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
   const searchInputRef = useRef(null);
+  const productsDropdownRef = useRef(null);
+  const productsTimeoutRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, currentUser } = useAuth();
   const { cartCount } = useCart();
   const { isDark, toggleTheme } = useContext(ThemeContext);
+
+  // Load categories for the dropdown
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await fetchCategories();
+        if (response?.success && Array.isArray(response?.categories)) {
+          setCategories(response.categories);
+        }
+      } catch (err) {
+        console.error('Failed to load categories:', err);
+      }
+    };
+    loadCategories();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -58,32 +78,45 @@ const Navbar = () => {
   }, [isSearchOpen]);
 
   const navLinks = [
-    { name: 'Home', href: '#', type: 'scroll' },
-    { name: 'Products', href: '/products', type: 'page' },
+    { name: 'Home', href: '/', type: 'page' },
+    { name: 'Products', href: '/products', type: 'products' },
     { name: 'Cart', href: '/cart', type: 'page' },
     { name: 'About', href: '/about', type: 'page' },
     { name: 'Contact', href: '#footer', type: 'scroll' },
   ];
 
   const handleNavigation = (link) => {
-    if (link.type === 'page') {
+    if (link.type === 'page' || link.type === 'products') {
       navigate(link.href);
-    } else {
-      // Scroll type - only works on home page
+    } else if (link.type === 'scroll') {
       if (location.pathname !== '/') {
-        navigate('/' + link.href);
-      } else {
-        if (link.href === '#') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
+        // Navigate to home first, then scroll after a small delay
+        navigate('/');
+        setTimeout(() => {
           const element = document.querySelector(link.href);
           if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
           }
+        }, 300);
+      } else {
+        const element = document.querySelector(link.href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
         }
       }
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleProductsMouseEnter = () => {
+    if (productsTimeoutRef.current) clearTimeout(productsTimeoutRef.current);
+    setIsProductsDropdownOpen(true);
+  };
+
+  const handleProductsMouseLeave = () => {
+    productsTimeoutRef.current = setTimeout(() => {
+      setIsProductsDropdownOpen(false);
+    }, 200);
   };
 
   const handleSearchSubmit = (e) => {
@@ -119,27 +152,93 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group" onClick={() => navigate('/')}>
+          {/* Logo - always navigates to homepage */}
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 group"
+          >
             <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform" style={{ background: 'var(--accent-gold)' }}>
               <Dumbbell className="w-6 h-6" style={{ color: '#09090b' }} />
             </div>
             <span className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>IronCore</span>
-          </a>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => handleNavigation(link)}
-                className="font-medium transition-colors hover:opacity-100"
-                style={{ color: 'var(--text-secondary)' }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-              >
-                {link.name}
-              </button>
+              link.type === 'products' ? (
+                /* Products link with hover dropdown */
+                <div
+                  key={link.name}
+                  className="relative"
+                  ref={productsDropdownRef}
+                  onMouseEnter={handleProductsMouseEnter}
+                  onMouseLeave={handleProductsMouseLeave}
+                >
+                  <button
+                    onClick={() => handleNavigation(link)}
+                    className="font-medium transition-colors hover:opacity-100 flex items-center gap-1"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+                  >
+                    {link.name}
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isProductsDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Products Dropdown */}
+                  {isProductsDropdownOpen && (
+                    <div
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-56 rounded-xl shadow-xl border py-2 z-50"
+                      style={{ background: 'var(--dropdown-bg)', borderColor: 'var(--border)' }}
+                    >
+                      {/* Arrow */}
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45" style={{ background: 'var(--dropdown-bg)', borderLeft: '1px solid var(--border)', borderTop: '1px solid var(--border)' }} />
+                      
+                      <button
+                        onClick={() => { navigate('/products'); setIsProductsDropdownOpen(false); }}
+                        className="w-full px-4 py-2.5 text-left text-sm font-semibold flex items-center gap-2 transition-colors"
+                        style={{ color: 'var(--accent-gold)' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--dropdown-hover)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Package className="w-4 h-4" />
+                        All Products
+                      </button>
+                      
+                      <div className="mx-3 my-1" style={{ borderBottom: '1px solid var(--border)' }} />
+                      
+                      {categories.length > 0 ? (
+                        categories.map(cat => (
+                          <button
+                            key={cat.id}
+                            onClick={() => { navigate(`/products?category=${cat.id}`); setIsProductsDropdownOpen(false); }}
+                            className="w-full px-4 py-2.5 text-left text-sm flex items-center gap-2 transition-colors"
+                            style={{ color: 'var(--text-secondary)' }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'var(--dropdown-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                          >
+                            {cat.name}
+                          </button>
+                        ))
+                      ) : (
+                        <p className="px-4 py-2 text-xs" style={{ color: 'var(--text-muted)' }}>Loading...</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  key={link.name}
+                  onClick={() => handleNavigation(link)}
+                  className="font-medium transition-colors hover:opacity-100"
+                  style={{ color: 'var(--text-secondary)' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+                >
+                  {link.name}
+                </button>
+              )
             ))}
           </div>
 
@@ -316,14 +415,39 @@ const Navbar = () => {
               </form>
 
               {navLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={() => handleNavigation(link)}
-                  className="font-medium transition-colors text-left"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  {link.name}
-                </button>
+                link.type === 'products' ? (
+                  <div key={link.name}>
+                    <button
+                      onClick={() => handleNavigation(link)}
+                      className="font-medium transition-colors text-left"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      {link.name}
+                    </button>
+                    {/* Mobile category sub-links */}
+                    <div className="ml-4 mt-2 flex flex-col gap-2">
+                      {categories.map(cat => (
+                        <button
+                          key={cat.id}
+                          onClick={() => { navigate(`/products?category=${cat.id}`); setIsMobileMenuOpen(false); }}
+                          className="text-sm text-left transition-colors"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
+                          {cat.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    key={link.name}
+                    onClick={() => handleNavigation(link)}
+                    className="font-medium transition-colors text-left"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {link.name}
+                  </button>
+                )
               ))}
               {isAuthenticated && (
                 <>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { adminFetchProducts, adminUpdateProduct, adminDeleteProduct, adminFetchCategories, adminUploadProductImage, adminUploadProductImageForCreate } from '../../services/adminApi';
 import { addProduct, fetchCategories } from '../../services/api';
-import { Search, Plus, Edit2, Trash2, X, Upload } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, X, Upload, Copy } from 'lucide-react';
 
 const AdminProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -37,7 +37,27 @@ const AdminProductsPage = () => {
     setError('');
   };
 
-
+  const openDuplicate = (p) => {
+    setForm({
+      name: (p.name || '') + ' (Copy)',
+      description: p.description || '',
+      brand: p.brand || '',
+      isVegetarian: p.isVegetarian || false,
+      categoryId: p.categoryId || '',
+      imageUrl: p.imageUrl || '',
+      statusActiveInd: p.statusActiveInd || 'Y',
+      ingredients: p.ingredients || '',
+      nutritionFacts: p.nutritionFacts || '',
+      recommendedUsage: p.recommendedUsage || '',
+      warning: p.warning || '',
+      expiryDate: p.expiryDate || '',
+      variants: p.variants && p.variants.length > 0
+        ? p.variants.map(v => ({ flavor: v.flavor || '', netQuantity: v.netQuantity || '', mrp: v.mrp || '', finalPrice: v.finalPrice || '', stock: v.stock || 0 }))
+        : [{ flavor: '', netQuantity: '', mrp: '', finalPrice: '', stock: 0 }]
+    });
+    setModal('add');
+    setError('');
+  };
 
     const openEdit = (p) => {
       setForm({ ...p, categoryId: p.categoryId || '', statusActiveInd: p.statusActiveInd || 'Y', variants: p.variants && p.variants.length > 0 ? [...p.variants] : [{ flavor: '', netQuantity: '', mrp: '', finalPrice: '', stock: 0 }] });
@@ -124,9 +144,10 @@ const AdminProductsPage = () => {
                     </button>
                   </td>
                   <td className="py-3 px-4"><div className="flex items-center gap-1">
-                    <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-white transition-colors"><Edit2 size={14} /></button>
-                    <label className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-blue-400 cursor-pointer transition-colors"><Upload size={14} /><input type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files[0]) handleImageUpload(p.productId, e.target.files[0]) }} /></label>
-                    <button onClick={() => handleDelete(p.productId)} className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors"><Trash2 size={14} /></button>
+                    <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-white transition-colors" title="Edit"><Edit2 size={14} /></button>
+                    <button onClick={() => openDuplicate(p)} className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-primary-400 transition-colors" title="Duplicate"><Copy size={14} /></button>
+                    <label className="p-2 rounded-lg hover:bg-white/[0.06] text-gray-400 hover:text-blue-400 cursor-pointer transition-colors" title="Upload Image"><Upload size={14} /><input type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files[0]) handleImageUpload(p.productId, e.target.files[0]) }} /></label>
+                    <button onClick={() => handleDelete(p.productId)} className="p-2 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors" title="Delete"><Trash2 size={14} /></button>
                   </div></td>
                 </tr>
               ))}

@@ -18,7 +18,6 @@ const ProductCard = ({ product }) => {
   };
 
   const defaultVariant = product.variants && product.variants.length > 0 ? product.variants[0] : null;
-
   const { name, brand, description, imageUrl, rating, categoryName } = product;
   const { flavor, netQuantity, mrp, finalPrice, stock } = defaultVariant || {};
 
@@ -50,7 +49,7 @@ const ProductCard = ({ product }) => {
       onClick={handleCardClick}
     >
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden" style={{ background: '#27272a' }}>
+      <div className="relative aspect-square overflow-hidden" style={{ background: 'var(--bg-subtle)' }}>
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -61,14 +60,14 @@ const ProductCard = ({ product }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-2 rounded-xl" style={{ background: '#3f3f46' }} />
-              <span className="text-zinc-600 text-xs">No Image</span>
+              <div className="w-16 h-16 mx-auto mb-2 rounded-xl" style={{ background: 'var(--bg-input)' }} />
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>No Image</span>
             </div>
           </div>
         )}
 
-        {/* Dark overlay on hover */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500" />
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-500" />
 
         {/* Discount Badge */}
         {discount > 0 && (
@@ -84,7 +83,7 @@ const ProductCard = ({ product }) => {
         {categoryName && (
           <div
             className="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-medium backdrop-blur-sm"
-            style={{ background: 'rgba(0,0,0,0.5)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: 'rgba(0,0,0,0.45)', color: 'rgba(255,255,255,0.8)', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             {categoryName}
           </div>
@@ -97,17 +96,13 @@ const ProductCard = ({ product }) => {
             disabled={!hasStock || adding}
             className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200"
             style={{
-              background: hasStock ? 'linear-gradient(135deg, #e4b94a, #f97316)' : 'rgba(255,255,255,0.1)',
-              color: hasStock ? '#09090b' : 'rgba(255,255,255,0.3)',
+              background: hasStock ? 'linear-gradient(135deg, #e4b94a, #f97316)' : 'rgba(0,0,0,0.4)',
+              color: hasStock ? '#09090b' : 'rgba(255,255,255,0.4)',
               boxShadow: hasStock ? '0 8px 24px rgba(228,185,74,0.35)' : 'none',
             }}
             aria-label={`Add ${name} to cart`}
           >
-            {adding ? (
-              <Zap className="w-4 h-4 animate-bounce" />
-            ) : (
-              <ShoppingCart className="w-4 h-4" />
-            )}
+            {adding ? <Zap className="w-4 h-4 animate-bounce" /> : <ShoppingCart className="w-4 h-4" />}
             {adding ? 'Adding...' : hasStock ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
@@ -123,7 +118,7 @@ const ProductCard = ({ product }) => {
         )}
 
         {/* Name */}
-        <h3 className="font-bold text-white text-base mb-2 line-clamp-2 group-hover:text-zinc-100 transition-colors leading-snug">
+        <h3 className="font-bold text-base mb-2 line-clamp-2 leading-snug transition-colors" style={{ color: 'var(--text-primary)' }}>
           {name}
         </h3>
 
@@ -131,12 +126,12 @@ const ProductCard = ({ product }) => {
         {(flavor || netQuantity) && (
           <div className="flex items-center gap-2 mb-4 flex-wrap">
             {flavor && (
-              <span className="text-xs px-2 py-1 rounded-md" style={{ background: 'rgba(255,255,255,0.06)', color: '#a1a1aa', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <span className="text-xs px-2 py-1 rounded-md" style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
                 {flavor}
               </span>
             )}
             {netQuantity && (
-              <span className="text-xs px-2 py-1 rounded-md" style={{ background: 'rgba(255,255,255,0.06)', color: '#a1a1aa', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <span className="text-xs px-2 py-1 rounded-md" style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
                 {netQuantity}
               </span>
             )}
@@ -147,26 +142,26 @@ const ProductCard = ({ product }) => {
         {rating > 0 && (
           <div className="flex items-center gap-1 mb-3">
             <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs font-semibold text-zinc-400">{rating}</span>
+            <span className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>{rating}</span>
           </div>
         )}
 
         {/* Price & Stock */}
-        <div className="flex items-center justify-between mt-auto pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex items-center justify-between mt-auto pt-4" style={{ borderTop: '1px solid var(--border)' }}>
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-xl font-black text-white">
+              <span className="text-xl font-black" style={{ color: 'var(--text-primary)' }}>
                 ₹{finalPrice?.toLocaleString('en-IN') || 'N/A'}
               </span>
               {mrp > finalPrice && (
-                <span className="text-xs text-zinc-600 line-through">
+                <span className="text-xs line-through" style={{ color: 'var(--text-muted)' }}>
                   ₹{mrp?.toLocaleString('en-IN')}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Stock dot indicator */}
+          {/* Glowing stock dot */}
           <div className="flex items-center gap-1.5">
             <div
               className="w-1.5 h-1.5 rounded-full"
@@ -178,7 +173,6 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
 
-        {/* Cart feedback */}
         {cartMessage && (
           <div className="flex items-center gap-1.5 mt-3 text-xs font-medium" style={{ color: '#34d399' }}>
             <Check className="w-3.5 h-3.5" />

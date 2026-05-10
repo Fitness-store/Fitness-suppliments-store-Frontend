@@ -1,104 +1,179 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { FlaskConical, Truck, ShieldCheck, Headphones, RotateCcw, BadgeCheck } from 'lucide-react';
 
-const BenefitCard = ({ icon, title, description, color }) => {
-  const IconComponent = icon;
+const benefits = [
+  {
+    icon: FlaskConical,
+    title: 'Lab Tested',
+    description: 'Every batch is independently tested in NABL-certified labs for purity, potency, and safety.',
+    accent: '#60a5fa',
+    glow: 'rgba(96,165,250,0.12)',
+  },
+  {
+    icon: ShieldCheck,
+    title: '100% Authentic',
+    description: 'We source directly from authorized brand distributors. Zero compromise on authenticity.',
+    accent: '#34d399',
+    glow: 'rgba(52,211,153,0.12)',
+  },
+  {
+    icon: Truck,
+    title: 'Fast Shipping',
+    description: 'Free delivery on orders above ₹999. 24-72 hour dispatch across India.',
+    accent: '#a78bfa',
+    glow: 'rgba(167,139,250,0.12)',
+  },
+  {
+    icon: Headphones,
+    title: 'Expert Support',
+    description: 'Real advice from certified sports nutritionists — not bots, not scripts.',
+    accent: '#f97316',
+    glow: 'rgba(249,115,22,0.12)',
+  },
+  {
+    icon: RotateCcw,
+    title: 'Easy Returns',
+    description: '7-day no-questions-asked return policy on all sealed, unused products.',
+    accent: '#f472b6',
+    glow: 'rgba(244,114,182,0.12)',
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Best Price',
+    description: 'Found it cheaper? We\'ll match any authorised retailer\'s price — guaranteed.',
+    accent: '#e4b94a',
+    glow: 'rgba(228,185,74,0.12)',
+  },
+];
+
+const certifications = ['FSSAI Approved', 'GMP Certified', 'ISO 22000', 'NABL Tested', 'AYUSH Compliant'];
+
+function useInView(ref) {
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.15 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [ref]);
+  return inView;
+}
+
+const BenefitCard = ({ icon: Icon, title, description, accent, glow, index }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref);
+
   return (
-  <div className="group p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-    <div className={`w-14 h-14 ${color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-      <IconComponent className="w-7 h-7 text-white" />
+    <div
+      ref={ref}
+      className="group relative p-7 rounded-2xl transition-all duration-500 cursor-default"
+      style={{
+        background: '#18181b',
+        border: '1px solid rgba(255,255,255,0.06)',
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(32px)',
+        transition: `opacity 0.7s ease ${index * 0.08}s, transform 0.7s ease ${index * 0.08}s, box-shadow 0.3s ease, border-color 0.3s ease`,
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = accent + '44';
+        e.currentTarget.style.boxShadow = `0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px ${accent}22, inset 0 1px 0 ${accent}11`;
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
+    >
+      {/* Glow blob */}
+      <div
+        className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ background: glow, filter: 'blur(24px)', transform: 'translate(-25%, -25%)' }}
+      />
+
+      {/* Icon */}
+      <div
+        className="relative w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
+        style={{ background: glow, border: `1px solid ${accent}22` }}
+      >
+        <Icon className="w-6 h-6" style={{ color: accent }} />
+      </div>
+
+      <h3 className="font-bold text-white text-lg mb-2">{title}</h3>
+      <p className="text-zinc-500 text-sm leading-relaxed">{description}</p>
     </div>
-    <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-    <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
-  </div>
   );
 };
 
 const BenefitsSection = () => {
-  const benefits = [
-    {
-      icon: FlaskConical,
-      title: 'Lab Tested',
-      description: 'Every product is tested in certified labs for purity, potency, and safety.',
-      color: 'bg-blue-500',
-    },
-    {
-      icon: ShieldCheck,
-      title: '100% Authentic',
-      description: 'We source directly from brands. No counterfeit products, ever.',
-      color: 'bg-green-500',
-    },
-    {
-      icon: Truck,
-      title: 'Fast Shipping',
-      description: 'Free delivery on orders over $50. 2-5 day delivery across the country.',
-      color: 'bg-purple-500',
-    },
-    {
-      icon: Headphones,
-      title: 'Expert Support',
-      description: 'Get advice from certified nutritionists and fitness experts.',
-      color: 'bg-orange-500',
-    },
-    {
-      icon: RotateCcw,
-      title: 'Easy Returns',
-      description: '30-day hassle-free return policy. No questions asked.',
-      color: 'bg-pink-500',
-    },
-    {
-      icon: BadgeCheck,
-      title: 'Best Prices',
-      description: 'Price match guarantee. Found it cheaper? We\'ll match it.',
-      color: 'bg-primary-500',
-    },
-  ];
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef);
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-4 py-2 bg-navy-900/10 text-navy-900 font-medium text-sm rounded-full mb-4">
-            Why Choose Us
-          </span>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            The <span className="text-gradient">IronCore</span> Advantage
+    <section className="py-28 relative overflow-hidden" style={{ background: '#09090b' }}>
+      {/* Grid pattern */}
+      <div className="absolute inset-0 grid-pattern" />
+
+      {/* Glow top */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(228,185,74,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }}
+      />
+
+      <div ref={sectionRef} className="relative max-w-7xl mx-auto px-6 lg:px-12">
+        {/* Header */}
+        <div
+          className="text-center mb-20"
+          style={{ opacity: inView ? 1 : 0, transform: inView ? 'translateY(0)' : 'translateY(24px)', transition: 'all 0.8s ease' }}
+        >
+          <div className="inline-flex items-center gap-3 mb-6">
+            <span className="w-8 h-px" style={{ background: 'linear-gradient(90deg, transparent, #e4b94a)' }} />
+            <span className="text-xs font-semibold tracking-[0.25em] uppercase" style={{ color: '#e4b94a' }}>
+              Why IronCore
+            </span>
+            <span className="w-8 h-px" style={{ background: 'linear-gradient(90deg, #e4b94a, transparent)' }} />
+          </div>
+
+          <h2 className="section-heading text-5xl sm:text-6xl font-black text-white leading-tight mb-6">
+            The <span className="text-gradient">IronCore</span>
+            <br />
+            Advantage
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Trusted by 100,000+ athletes who choose IronCore for their fitness journey and an unmatched shopping experience
+          <p className="text-zinc-500 text-lg max-w-xl mx-auto leading-relaxed">
+            Trusted by 50,000+ athletes across India who demand nothing but the best.
           </p>
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {benefits.map((benefit, index) => (
-            <BenefitCard key={index} {...benefit} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {benefits.map((b, i) => (
+            <BenefitCard key={i} {...b} index={i} />
           ))}
         </div>
 
-        {/* Trust Banner */}
-        <div className="mt-16 p-8 bg-gradient-to-r from-navy-900 to-navy-800 rounded-2xl text-center">
-          <div className="flex flex-wrap justify-center items-center gap-8 text-white/90">
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="w-6 h-6 text-primary-400" />
-              <span className="font-semibold">GMP Certified</span>
-            </div>
-            <div className="hidden sm:block w-px h-8 bg-white/20" />
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="w-6 h-6 text-primary-400" />
-              <span className="font-semibold">FDA Registered</span>
-            </div>
-            <div className="hidden sm:block w-px h-8 bg-white/20" />
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="w-6 h-6 text-primary-400" />
-              <span className="font-semibold">ISO 22000</span>
-            </div>
-            <div className="hidden sm:block w-px h-8 bg-white/20" />
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="w-6 h-6 text-primary-400" />
-              <span className="font-semibold">FSSAI Approved</span>
-            </div>
+        {/* Certifications scrolling strip */}
+        <div
+          className="mt-20 rounded-2xl overflow-hidden"
+          style={{
+            background: '#18181b',
+            border: '1px solid rgba(255,255,255,0.06)',
+            opacity: inView ? 1 : 0,
+            transform: inView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'all 0.8s ease 0.5s',
+          }}
+        >
+          <div className="px-8 py-5 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+            {certifications.map((cert, i) => (
+              <React.Fragment key={cert}>
+                <div className="flex items-center gap-2">
+                  <BadgeCheck className="w-4 h-4" style={{ color: '#e4b94a' }} />
+                  <span className="text-sm font-semibold text-zinc-400">{cert}</span>
+                </div>
+                {i < certifications.length - 1 && (
+                  <div className="hidden sm:block w-px h-5 bg-white/10" />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

@@ -1,200 +1,232 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const slides = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920&h=1080&fit=crop&q=90',
+    eyebrow: 'New Collection 2025',
     title: 'Unleash Your',
-    highlight: 'Inner Strength',
-    subtitle: 'Premium supplements for serious athletes',
-    cta: 'Shop Now',
+    highlight: 'Peak Performance',
+    subtitle: 'Elite-grade supplements engineered for athletes who refuse to settle for average.',
+    cta: 'Shop Collection',
+    ctaLink: '/products',
+    stat1: { value: '50K+', label: 'Athletes' },
+    stat2: { value: '100%', label: 'Authentic' },
+    stat3: { value: '4.9★', label: 'Rating' },
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1920&h=800&fit=crop',
+    image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1920&h=1080&fit=crop&q=90',
+    eyebrow: 'Best Seller',
     title: 'Fuel Your',
-    highlight: 'Workout',
-    subtitle: 'High-performance pre-workout formulas',
-    cta: 'Explore Pre-Workout',
+    highlight: 'Every Rep',
+    subtitle: 'High-performance pre-workout and whey protein formulas trusted by champions.',
+    cta: 'Shop Protein',
+    ctaLink: '/products',
+    stat1: { value: '30g', label: 'Protein/Serving' },
+    stat2: { value: 'Lab', label: 'Tested & Pure' },
+    stat3: { value: 'Free', label: 'Shipping ₹999+' },
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1920&h=800&fit=crop',
-    title: 'Recover &',
-    highlight: 'Build Muscle',
-    subtitle: 'Premium whey protein for optimal recovery',
-    cta: 'Shop Protein',
-  },
-  {
-    id: 4,
-    image: 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=1920&h=800&fit=crop',
-    title: 'Achieve Your',
-    highlight: 'Fitness Goals',
-    subtitle: 'Complete range of sports nutrition products',
-    cta: 'View All Products',
+    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=1920&h=1080&fit=crop&q=90',
+    eyebrow: 'Recovery Science',
+    title: 'Recover Faster,',
+    highlight: 'Build More',
+    subtitle: 'Science-backed recovery supplements to maximise gains and minimise downtime.',
+    cta: 'Explore Recovery',
+    ctaLink: '/products',
+    stat1: { value: '72hr', label: 'Delivery' },
+    stat2: { value: 'FSSAI', label: 'Approved' },
+    stat3: { value: '10%', label: 'Off: SMILE' },
   },
 ];
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const timeoutRef = useRef(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const autoPlayRef = useRef(null);
+  const progressRef = useRef(null);
+  const navigate = useNavigate();
+
+  const SLIDE_DURATION = 6000;
+
+  const startProgress = () => {
+    setProgress(0);
+    const startTime = Date.now();
+    clearInterval(progressRef.current);
+    progressRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(pct);
+    }, 30);
+  };
+
+  const goToSlide = (index) => {
+    if (isTransitioning || index === currentSlide) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentSlide(index);
+      setIsTransitioning(false);
+    }, 400);
+    startProgress();
+  };
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    startProgress();
+    autoPlayRef.current = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+        setIsTransitioning(false);
+      }, 400);
+      startProgress();
+    }, SLIDE_DURATION);
 
-    return () => clearInterval(interval);
-  }, [isAutoPlaying]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      clearInterval(autoPlayRef.current);
+      clearInterval(progressRef.current);
     };
   }, []);
 
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-    setIsAutoPlaying(false);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
+  const slide = slides[currentSlide];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setIsAutoPlaying(false);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    setIsAutoPlaying(false);
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const scrollToProducts = () => {
-    const productsSection = document.getElementById('products-section');
-    if (productsSection) {
-      productsSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollDown = () => {
+    const el = document.getElementById('products-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section className="relative h-[600px] lg:h-[700px] overflow-hidden">
-      {/* Slides */}
-      {slides.map((slide, index) => (
+    <section className="relative min-h-screen overflow-hidden bg-zinc-950 flex flex-col">
+      {/* Background Image with Ken Burns */}
+      {slides.map((s, i) => (
         <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
+          key={s.id}
+          className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+          style={{ opacity: i === currentSlide ? 1 : 0 }}
         >
-          {/* Background Image */}
-          <div
-            className="absolute inset-0 bg-cover bg-center transform scale-105 transition-transform duration-[5000ms]"
+          <img
+            src={s.image}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
             style={{
-              backgroundImage: `url('${slide.image}')`,
-              transform: index === currentSlide ? 'scale(1)' : 'scale(1.1)',
+              transform: i === currentSlide ? 'scale(1.05)' : 'scale(1)',
+              transition: 'transform 8s ease-out',
             }}
           />
-          
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950/90 via-navy-900/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-950/50 via-transparent to-transparent" />
+          {/* Multi-layer dark overlay for premium look */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(105deg, rgba(9,9,11,0.97) 0%, rgba(9,9,11,0.80) 40%, rgba(9,9,11,0.30) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(9,9,11,0.95) 0%, transparent 50%)' }} />
         </div>
       ))}
 
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 grid-pattern opacity-40" />
+
+      {/* Radial glow accent */}
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(ellipse, rgba(228,185,74,0.08) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+
       {/* Content */}
-      <div className="relative z-10 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-        <div className="max-w-xl pt-20">
-          {slides.map((slide, index) => (
+      <div className="relative z-10 flex-1 flex items-center">
+        <div className="max-w-7xl mx-auto w-full px-6 lg:px-12 pt-36 pb-24">
+          <div className="max-w-3xl">
+            {/* Eyebrow */}
             <div
-              key={slide.id}
-              className={`transition-all duration-700 ${
-                index === currentSlide
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-8 absolute'
-              }`}
+              key={`eyebrow-${currentSlide}`}
+              className="animate-fade-up inline-flex items-center gap-3 mb-8"
             >
-              {index === currentSlide && (
-                <>
-                  {/* Badge */}
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/20 border border-primary-500/30 rounded-full mb-6">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" />
-                    <span className="text-primary-400 text-sm font-medium">IronCore Supplements</span>
-                  </div>
-
-                  {/* Title */}
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                    {slide.title}
-                    <br />
-                    <span className="text-gradient">{slide.highlight}</span>
-                  </h1>
-
-                  {/* Subtitle */}
-                  <p className="text-lg text-gray-300 mb-8">{slide.subtitle}</p>
-
-                  {/* CTA */}
-                  <button
-                    onClick={scrollToProducts}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary-500/25"
-                  >
-                    {slide.cta}
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
-                </>
-              )}
+              <span className="w-8 h-px" style={{ background: 'linear-gradient(90deg, #e4b94a, #f97316)' }} />
+              <span className="text-sm font-semibold tracking-[0.2em] uppercase" style={{ color: '#e4b94a' }}>
+                {slide.eyebrow}
+              </span>
             </div>
-          ))}
+
+            {/* Main Heading */}
+            <div
+              key={`title-${currentSlide}`}
+              className={`transition-all duration-400 ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}
+              style={{ transition: 'opacity 0.4s ease, transform 0.4s ease' }}
+            >
+              <h1 className="section-heading text-6xl sm:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight text-white mb-6">
+                {slide.title}
+                <br />
+                <span className="text-gradient">{slide.highlight}</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-zinc-400 max-w-xl leading-relaxed mb-10 text-balance">
+                {slide.subtitle}
+              </p>
+
+              {/* CTAs */}
+              <div className="flex flex-wrap items-center gap-4 mb-16">
+                <button
+                  onClick={() => navigate(slide.ctaLink)}
+                  className="group btn-primary inline-flex items-center gap-3"
+                >
+                  {slide.cta}
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </button>
+                <button
+                  onClick={scrollDown}
+                  className="btn-secondary inline-flex items-center gap-3"
+                >
+                  Explore All
+                </button>
+              </div>
+            </div>
+
+            {/* Stats Row */}
+            <div
+              key={`stats-${currentSlide}`}
+              className="animate-fade-up-delay-3 flex items-center gap-10 border-t border-white/10 pt-8"
+            >
+              {[slide.stat1, slide.stat2, slide.stat3].map((stat, i) => (
+                <div key={i} className="flex flex-col">
+                  <span className="text-2xl font-black text-white">{stat.value}</span>
+                  <span className="text-xs font-medium tracking-wider text-zinc-500 uppercase">{stat.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all hover:scale-110"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
+      {/* Slide Controls — Bottom bar */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-6 lg:px-12 pb-10 flex items-center justify-between">
+        {/* Progress Indicators */}
+        <div className="flex items-center gap-3">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goToSlide(i)}
+              className="relative h-[3px] rounded-full overflow-hidden transition-all duration-300"
+              style={{ width: i === currentSlide ? '64px' : '24px', background: 'rgba(255,255,255,0.15)' }}
+              aria-label={`Go to slide ${i + 1}`}
+            >
+              {i === currentSlide && (
+                <div
+                  className="absolute top-0 left-0 h-full rounded-full"
+                  style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #e4b94a, #f97316)' }}
+                />
+              )}
+            </button>
+          ))}
+          <span className="text-zinc-600 text-xs font-medium ml-2">
+            0{currentSlide + 1} / 0{slides.length}
+          </span>
+        </div>
 
-      {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`transition-all duration-300 rounded-full ${
-              index === currentSlide
-                ? 'w-8 h-2 bg-primary-500'
-                : 'w-2 h-2 bg-white/50 hover:bg-white/70'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Slide Counter */}
-      <div className="absolute bottom-8 right-8 z-20 text-white/70 font-medium">
-        <span className="text-white text-xl">{String(currentSlide + 1).padStart(2, '0')}</span>
-        <span className="mx-2">/</span>
-        <span>{String(slides.length).padStart(2, '0')}</span>
+        {/* Scroll Down hint */}
+        <button
+          onClick={scrollDown}
+          className="flex flex-col items-center gap-2 text-zinc-500 hover:text-zinc-300 transition-colors group"
+          aria-label="Scroll to products"
+        >
+          <span className="text-xs font-medium tracking-wider uppercase">Scroll</span>
+          <ChevronDown className="w-4 h-4 animate-bounce" />
+        </button>
       </div>
     </section>
   );

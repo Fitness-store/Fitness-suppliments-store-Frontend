@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/useAuth';
@@ -8,7 +9,7 @@ import { Eye, EyeOff, Dumbbell, Mail, Lock, ArrowRight } from 'lucide-react';
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,6 +36,20 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError('');
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate(redirectTo, { replace: true });
+    } catch (err) {
+      setError(err.message || 'Google login failed');
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError('Google sign-in was unsuccessful. Please try again.');
+  };
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
@@ -58,6 +73,26 @@ const LoginPage = () => {
 
           {/* Card */}
           <div className="rounded-2xl p-6 sm:p-8 backdrop-blur-sm" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+            {/* Google Sign-In */}
+            <div className="flex justify-center mb-5">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+                shape="rectangular"
+                size="large"
+                width="100%"
+                text="signin_with"
+                theme="filled_black"
+              />
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-4 mb-5">
+              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+              <span className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>OR</span>
+              <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
                 <div className="px-4 py-3 rounded-xl text-sm" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171' }}>
@@ -137,7 +172,7 @@ const LoginPage = () => {
               </button>
             </form>
 
-            {/* Divider */}
+            {/* Signup divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
               <span className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>NEW HERE?</span>

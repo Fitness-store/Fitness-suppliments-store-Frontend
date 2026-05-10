@@ -4,6 +4,7 @@ import {
   logoutUser,
   refreshAuthSession,
   signupUser,
+  googleLoginUser,
   fetchMe,
   setAccessToken,
   clearAccessToken,
@@ -33,6 +34,12 @@ export const AuthProvider = ({ children }) => {
 
   const signup = useCallback(async (payload) => {
     const response = await signupUser(payload);
+    applyAuth(response);
+    return response;
+  }, [applyAuth]);
+
+  const googleLogin = useCallback(async (credential) => {
+    const response = await googleLoginUser(credential);
     applyAuth(response);
     return response;
   }, [applyAuth]);
@@ -105,9 +112,10 @@ export const AuthProvider = ({ children }) => {
     authLoading,
     login,
     signup,
+    googleLogin,
     logout,
     refreshSession,
-  }), [currentUser, isAuthenticated, authLoading, login, signup, logout, refreshSession]);
+  }), [currentUser, isAuthenticated, authLoading, login, signup, googleLogin, logout, refreshSession]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

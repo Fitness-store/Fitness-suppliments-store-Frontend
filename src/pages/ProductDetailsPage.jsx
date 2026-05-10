@@ -85,21 +85,22 @@ const ProductDetailsPage = () => {
     setCartMessage(result.message);
     setTimeout(() => setCartMessage(''), 3000);
   };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
         <Navbar />
-        <div className="pt-32 pb-12">
+        <div className="pt-36 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="animate-pulse">
-              <div className="h-8 w-32 bg-gray-200 rounded mb-8" />
+              <div className="h-8 w-32 rounded mb-8" style={{ background: 'var(--bg-subtle)' }} />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div className="aspect-square bg-gray-200 rounded-2xl" />
+                <div className="aspect-square rounded-2xl" style={{ background: 'var(--bg-subtle)' }} />
                 <div className="space-y-4">
-                  <div className="h-8 w-3/4 bg-gray-200 rounded" />
-                  <div className="h-6 w-1/2 bg-gray-200 rounded" />
-                  <div className="h-12 w-1/3 bg-gray-200 rounded" />
-                  <div className="h-32 w-full bg-gray-200 rounded" />
+                  <div className="h-8 w-3/4 rounded" style={{ background: 'var(--bg-subtle)' }} />
+                  <div className="h-6 w-1/2 rounded" style={{ background: 'var(--bg-subtle)' }} />
+                  <div className="h-12 w-1/3 rounded" style={{ background: 'var(--bg-subtle)' }} />
+                  <div className="h-32 w-full rounded" style={{ background: 'var(--bg-subtle)' }} />
                 </div>
               </div>
             </div>
@@ -112,15 +113,16 @@ const ProductDetailsPage = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
         <Navbar />
-        <div className="pt-32 pb-12">
+        <div className="pt-36 pb-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="bg-white rounded-2xl p-12 border border-gray-100">
-              <p className="text-red-600 text-lg mb-6">{error || 'Product not found'}</p>
+            <div className="rounded-2xl p-12" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+              <p className="text-lg mb-6" style={{ color: 'var(--status-red)' }}>{error || 'Product not found'}</p>
               <button
                 onClick={() => navigate('/products')}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                style={{ background: 'var(--accent-grad)', color: '#09090b' }}
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Products
@@ -137,24 +139,24 @@ const ProductDetailsPage = () => {
   const hasStock = selectedVariant && selectedVariant.stock > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
       
-      <div className="pt-32 pb-12">
+      <div className="pt-36 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <Link to="/" className="hover:text-primary-600 transition-colors">Home</Link>
+          <nav className="flex items-center gap-2 text-sm mb-8" style={{ color: 'var(--text-muted)' }}>
+            <Link to="/" className="hover:text-primary-400 transition-colors">Home</Link>
             <span>/</span>
-            <Link to="/products" className="hover:text-primary-600 transition-colors">Products</Link>
+            <Link to="/products" className="hover:text-primary-400 transition-colors">Products</Link>
             <span>/</span>
-            <span className="text-gray-900 font-medium truncate">{product.name}</span>
+            <span className="font-medium truncate" style={{ color: 'var(--text-primary)' }}>{product.name}</span>
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Product Image */}
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden">
+              <div className="aspect-square rounded-2xl overflow-hidden" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 {product.imageUrl ? (
                   <img
                     src={product.imageUrl}
@@ -164,8 +166,8 @@ const ProductDetailsPage = () => {
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4" />
-                      <p className="text-gray-400">No image available</p>
+                      <div className="w-24 h-24 rounded-full mx-auto mb-4" style={{ background: 'var(--bg-subtle)' }} />
+                      <p style={{ color: 'var(--text-muted)' }}>No image available</p>
                     </div>
                   </div>
                 )}
@@ -174,12 +176,12 @@ const ProductDetailsPage = () => {
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 {discount > 0 && (
-                  <span className="px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded-full">
+                  <span className="px-3 py-1 text-sm font-semibold rounded-full" style={{ background: 'var(--status-red)', color: '#fff' }}>
                     -{discount}%
                   </span>
                 )}
                 {!hasStock && (
-                  <span className="px-3 py-1 bg-gray-500 text-white text-sm font-semibold rounded-full">
+                  <span className="px-3 py-1 text-sm font-semibold rounded-full" style={{ background: 'var(--bg-subtle)', color: 'var(--text-secondary)' }}>
                     Out of Stock
                   </span>
                 )}
@@ -190,14 +192,14 @@ const ProductDetailsPage = () => {
             <div>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-primary-600 font-medium mb-1">{product.brand}</p>
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">{product.name}</h1>
+                  <p className="font-medium mb-1" style={{ color: 'var(--accent-gold)' }}>{product.brand}</p>
+                  <h1 className="text-2xl lg:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{product.name}</h1>
                 </div>
                 <div className="flex gap-2">
-                  <button className="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                  <button className="p-2 rounded-lg transition-colors" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                     <Heart className="w-6 h-6" />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-primary-600 transition-colors">
+                  <button className="p-2 rounded-lg transition-colors" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                     <Share2 className="w-6 h-6" />
                   </button>
                 </div>
@@ -212,25 +214,26 @@ const ProductDetailsPage = () => {
                       className={`w-5 h-5 ${
                         i < Math.round(product.rating || 0)
                           ? 'text-yellow-400 fill-yellow-400'
-                          : 'text-gray-300'
+                          : ''
                       }`}
+                      style={i >= Math.round(product.rating || 0) ? { color: 'var(--text-muted)' } : {}}
                     />
                   ))}
                 </div>
-                <span className="text-gray-500">({product.rating?.toFixed(1) || '0.0'})</span>
+                <span style={{ color: 'var(--text-muted)' }}>({product.rating?.toFixed(1) || '0.0'})</span>
               </div>
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-6">
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-3xl font-bold text-gradient">
                   Rs {selectedVariant?.finalPrice?.toLocaleString()}
                 </span>
                 {selectedVariant?.mrp > selectedVariant?.finalPrice && (
                   <>
-                    <span className="text-xl text-gray-400 line-through">
+                    <span className="text-xl line-through" style={{ color: 'var(--text-muted)' }}>
                       Rs {selectedVariant?.mrp?.toLocaleString()}
                     </span>
-                    <span className="text-green-600 font-medium">{discount}% off</span>
+                    <span className="font-medium" style={{ color: 'var(--status-green)' }}>{discount}% off</span>
                   </>
                 )}
               </div>
@@ -238,17 +241,17 @@ const ProductDetailsPage = () => {
               {/* Variant Selector */}
               {product.variants && product.variants.length > 0 && (
                 <div className="mb-6 space-y-4">
-                  <h3 className="font-medium text-gray-900">Select Variant</h3>
+                  <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>Select Variant</h3>
                   <div className="flex flex-wrap gap-2">
                     {product.variants.map((variant) => (
                       <button
                         key={variant.id}
                         onClick={() => setSelectedVariant(variant)}
-                        className={`px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${
-                          selectedVariant?.id === variant.id
-                            ? 'border-primary-600 bg-primary-50 text-primary-700'
-                            : 'border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
+                        className="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200"
+                        style={selectedVariant?.id === variant.id
+                          ? { background: 'rgba(228,185,74,0.15)', border: '1px solid rgba(228,185,74,0.4)', color: 'var(--accent-gold)' }
+                          : { background: 'var(--bg-input)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }
+                        }
                       >
                         {variant.flavor} - {variant.netQuantity}
                       </button>
@@ -259,28 +262,30 @@ const ProductDetailsPage = () => {
 
               {/* Stock Status */}
               <div className="flex items-center gap-2 mb-6">
-                <Check className={`w-5 h-5 ${hasStock ? 'text-green-500' : 'text-gray-400'}`} />
-                <span className={hasStock ? 'text-green-700' : 'text-gray-500'}>
+                <Check className="w-5 h-5" style={{ color: hasStock ? 'var(--status-green)' : 'var(--text-muted)' }} />
+                <span style={{ color: hasStock ? 'var(--status-green)' : 'var(--text-muted)' }}>
                   {hasStock ? `In Stock (${selectedVariant?.stock} units)` : 'Out of Stock'}
                 </span>
               </div>
 
               {/* Quantity Selector */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="font-medium text-gray-700">Quantity:</span>
-                <div className="flex items-center border border-gray-200 rounded-lg">
+                <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>Quantity:</span>
+                <div className="flex items-center rounded-xl" style={{ border: '1px solid var(--border)' }}>
                   <button
                     onClick={() => handleQuantityChange(-1)}
                     disabled={quantity <= 1}
-                    className="p-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    style={{ color: 'var(--text-secondary)' }}
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="w-12 text-center font-medium">{quantity}</span>
+                  <span className="w-12 text-center font-medium" style={{ color: 'var(--text-primary)' }}>{quantity}</span>
                   <button
                     onClick={() => handleQuantityChange(1)}
                     disabled={quantity >= (selectedVariant?.stock || 0)}
-                    className="p-3 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="p-3 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    style={{ color: 'var(--text-secondary)' }}
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -291,11 +296,11 @@ const ProductDetailsPage = () => {
                 <button
                   disabled={!hasStock}
                   onClick={handleAddToCart}
-                  className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                    hasStock
-                      ? 'bg-navy-900 hover:bg-navy-800 text-white'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300"
+                  style={hasStock
+                    ? { background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)' }
+                    : { background: 'var(--bg-subtle)', color: 'var(--text-muted)', cursor: 'not-allowed' }
+                  }
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {hasStock ? 'Add To Cart' : 'Out of Stock'}
@@ -303,53 +308,54 @@ const ProductDetailsPage = () => {
                 <button
                   disabled={!hasStock}
                   onClick={handleOrderNow}
-                  className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
-                    hasStock
-                      ? 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg hover:shadow-xl'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02]"
+                  style={hasStock
+                    ? { background: 'var(--accent-grad)', color: '#09090b' }
+                    : { background: 'var(--bg-subtle)', color: 'var(--text-muted)', cursor: 'not-allowed' }
+                  }
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {hasStock ? (orderLoading ? 'Placing Order...' : 'Order Now') : 'Out of Stock'}
                 </button>
               </div>
               {orderMessage && (
-                <p className={`text-sm mb-4 ${orderMessage.toLowerCase().includes('fail') ? 'text-red-600' : 'text-green-700'}`}>
+                <p className="text-sm mb-4" style={{ color: orderMessage.toLowerCase().includes('fail') ? 'var(--status-red)' : 'var(--status-green)' }}>
                   {orderMessage}
                 </p>
               )}
               {cartMessage && (
-                <p className="text-sm mb-4 text-gray-600">{cartMessage}</p>
+                <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>{cartMessage}</p>
               )}
 
               {/* Trust Badges */}
-              <div className="grid grid-cols-3 gap-4 py-6 border-t border-gray-100">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <ShieldCheck className="w-5 h-5 text-primary-600" />
-                  <span>100% Authentic</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Truck className="w-5 h-5 text-primary-600" />
-                  <span>Free Shipping</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <RotateCcw className="w-5 h-5 text-primary-600" />
-                  <span>Easy Returns</span>
-                </div>
+              <div className="grid grid-cols-3 gap-4 py-6" style={{ borderTop: '1px solid var(--border)' }}>
+                {[
+                  { icon: ShieldCheck, text: '100% Authentic' },
+                  { icon: Truck, text: 'Free Shipping' },
+                  { icon: RotateCcw, text: 'Easy Returns' },
+                ].map((badge, i) => {
+                  const Icon = badge.icon;
+                  return (
+                    <div key={i} className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      <Icon className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
+                      <span>{badge.text}</span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Tabs */}
-              <div className="border-b border-gray-200 mb-6">
+              <div className="mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
                 <div className="flex gap-6">
                   {['description', 'details'].map(tab => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`pb-3 font-medium capitalize transition-colors ${
-                        activeTab === tab
-                          ? 'text-primary-600 border-b-2 border-primary-600'
-                          : 'text-gray-500 hover:text-gray-700'
-                      }`}
+                      className="pb-3 font-medium capitalize transition-colors"
+                      style={activeTab === tab
+                        ? { color: 'var(--accent-gold)', borderBottom: '2px solid var(--accent-gold)' }
+                        : { color: 'var(--text-muted)' }
+                      }
                     >
                       {tab}
                     </button>
@@ -358,32 +364,23 @@ const ProductDetailsPage = () => {
               </div>
 
               {/* Tab Content */}
-              <div className="text-gray-600 leading-relaxed">
+              <div className="leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 {activeTab === 'description' && (
                   <p>{product.description || 'No description available.'}</p>
                 )}
                 {activeTab === 'details' && (
                   <div className="space-y-2">
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-500">Brand</span>
-                      <span className="font-medium">{product.brand}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-500">Category</span>
-                      <span className="font-medium capitalize">{product.categoryName}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-500">Stock</span>
-                      <span className="font-medium">{product.stock} units</span>
-                    </div>
-                    {product.isVegetarian !== undefined && (
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-500">Type</span>
-                        <span className="font-medium">
-                          {product.isVegetarian ? 'Vegetarian' : 'Non-Vegetarian'}
-                        </span>
+                    {[
+                      { label: 'Brand', value: product.brand },
+                      { label: 'Category', value: product.categoryName },
+                      { label: 'Stock', value: `${product.stock} units` },
+                      ...(product.isVegetarian !== undefined ? [{ label: 'Type', value: product.isVegetarian ? 'Vegetarian' : 'Non-Vegetarian' }] : []),
+                    ].map((row, i) => (
+                      <div key={i} className="flex justify-between py-2" style={{ borderBottom: '1px solid var(--border)' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>{row.label}</span>
+                        <span className="font-medium capitalize" style={{ color: 'var(--text-primary)' }}>{row.value}</span>
                       </div>
-                    )}
+                    ))}
                   </div>
                 )}
               </div>
@@ -398,4 +395,3 @@ const ProductDetailsPage = () => {
 };
 
 export default ProductDetailsPage;
-

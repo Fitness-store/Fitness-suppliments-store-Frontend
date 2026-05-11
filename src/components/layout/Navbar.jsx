@@ -338,6 +338,25 @@ const Navbar = () => {
 
           {/* Mobile Actions + Menu Button */}
           <div className="flex md:hidden items-center gap-1">
+            {/* Mobile Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg transition-all duration-300 hover:scale-110 min-w-[44px] min-h-[44px] flex items-center justify-center"
+              style={{ color: 'var(--text-secondary)' }}
+              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              <div className="relative w-5 h-5">
+                <Sun
+                  className="absolute inset-0 w-5 h-5 transition-all duration-300"
+                  style={{ opacity: isDark ? 0 : 1, transform: isDark ? 'rotate(90deg) scale(0.5)' : 'rotate(0deg) scale(1)' }}
+                />
+                <Moon
+                  className="absolute inset-0 w-5 h-5 transition-all duration-300"
+                  style={{ opacity: isDark ? 1 : 0, transform: isDark ? 'rotate(0deg) scale(1)' : 'rotate(-90deg) scale(0.5)' }}
+                />
+              </div>
+            </button>
+
             {/* Mobile Cart */}
             <button
               onClick={() => navigate('/cart')}

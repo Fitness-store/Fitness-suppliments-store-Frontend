@@ -264,7 +264,7 @@ const Navbar = () => {
             </button>
             <button
               onClick={toggleSearch}
-              className="p-2 transition-colors"
+              className="p-2 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
               style={{ color: 'var(--text-secondary)' }}
               aria-label="Toggle search"
             >
@@ -272,7 +272,7 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => navigate('/cart')}
-              className="p-2 transition-colors relative"
+              className="p-2 transition-colors relative min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
               style={{ color: 'var(--text-secondary)' }}
             >
               <ShoppingCart className="w-5 h-5" />
@@ -284,9 +284,9 @@ const Navbar = () => {
             </button>
             {isAuthenticated && (
               <div className="profile-dropdown relative">
-                <button 
+                <button
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="flex items-center gap-1 p-2 transition-colors"
+                  className="flex items-center gap-1 p-2 transition-colors min-h-[44px] rounded-lg"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   <User className="w-5 h-5" />
@@ -341,7 +341,7 @@ const Navbar = () => {
             {/* Mobile Cart */}
             <button
               onClick={() => navigate('/cart')}
-              className="p-2 transition-colors relative"
+              className="p-2 transition-colors relative min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
               style={{ color: 'var(--text-secondary)' }}
             >
               <ShoppingCart className="w-5 h-5" />
@@ -358,7 +358,7 @@ const Navbar = () => {
               <div className="profile-dropdown relative">
                 <button
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  className="p-2 transition-colors"
+                  className="p-2 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   <User className="w-5 h-5" />
@@ -408,7 +408,7 @@ const Navbar = () => {
             {/* Hamburger */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 transition-colors"
+              className="p-2 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
               style={{ color: 'var(--text-primary)' }}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

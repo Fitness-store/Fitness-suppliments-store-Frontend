@@ -87,7 +87,7 @@ const CartPage = () => {
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => decrementQuantity(item.variantId)}
-                          className="p-2 rounded-lg transition-colors"
+                          className="p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                           style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
                         >
                           <Minus className="w-4 h-4" />
@@ -95,14 +95,14 @@ const CartPage = () => {
                         <span className="w-8 text-center font-medium" style={{ color: 'var(--text-primary)' }}>{item.quantity}</span>
                         <button
                           onClick={() => incrementQuantity(item.variantId)}
-                          className="p-2 rounded-lg transition-colors"
+                          className="p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                           style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
                         >
                           <Plus className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => removeFromCart(item.variantId)}
-                          className="p-2 rounded-lg transition-colors"
+                          className="p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                           style={{ color: 'var(--status-red)', border: '1px solid rgba(239,68,68,0.2)' }}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -126,7 +126,7 @@ const CartPage = () => {
 
               {/* Right: Order Summary */}
               <div className="lg:col-span-1">
-                <div className="rounded-2xl p-6 sticky top-36" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
+                <div className="rounded-2xl p-6 lg:sticky lg:top-36" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-card)' }}>
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                     <ShoppingBag className="w-5 h-5" style={{ color: 'var(--accent-gold)' }} />
                     Order Summary

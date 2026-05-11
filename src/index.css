@@ -70,6 +70,25 @@
   
   html {
     @apply scroll-smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  button, a {
+    touch-action: manipulation;
+  }
+
+  input, textarea, select {
+    font-size: 16px;
+  }
+
+  @media (min-width: 640px) {
+    input, textarea, select {
+      font-size: 0.875rem;
+    }
   }
 }
 
@@ -97,8 +116,8 @@
   }
   
   .btn-primary {
-    @apply px-5 py-3 sm:px-8 sm:py-4 text-white font-semibold rounded-xl 
-           transition-all duration-300 transform hover:scale-105 hover:shadow-lg 
+    @apply px-5 py-3 sm:px-8 sm:py-4 text-white font-semibold rounded-xl
+           transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95
            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900
            text-sm sm:text-base;
     background: linear-gradient(135deg, #e4b94a, #f97316);
@@ -110,8 +129,8 @@
   }
   
   .btn-secondary {
-    @apply px-5 py-3 sm:px-8 sm:py-4 font-semibold rounded-xl 
-           border transition-all duration-300 transform hover:scale-105
+    @apply px-5 py-3 sm:px-8 sm:py-4 font-semibold rounded-xl
+           border transition-all duration-300 transform hover:scale-105 active:scale-95
            text-sm sm:text-base;
     color: var(--text-primary);
     border-color: var(--border-hover);

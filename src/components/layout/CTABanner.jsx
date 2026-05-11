@@ -66,7 +66,7 @@ const CTABanner = () => {
               </div>
 
               {/* Headline */}
-              <h2 className="section-heading text-5xl lg:text-6xl font-black leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
+              <h2 className="section-heading text-3xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
                 Your First Step to
                 <br />
                 <span className="text-gradient">Greatness</span>

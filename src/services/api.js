@@ -55,12 +55,16 @@ const isAuthRefreshPath = (url = '') => url.includes('/fs/auth/refresh');
 
 const isAuthActionPath = (url = '') =>
   url.includes('/fs/auth/login') ||
-  url.includes('/fs/auth/signup');
+  url.includes('/fs/auth/signup') ||
+  url.includes('/fs/auth/google');
+
+const isAdminPath = (url = '') => url.includes('/fs/admin/');
 
 // Attach Authorization header if we have a token (backward compat + double security)
+// Skip if the request already has an explicit Authorization header (e.g. admin API calls)
 api.interceptors.request.use(
   (config) => {
-    if (accessToken) {
+    if (accessToken && !config.headers.Authorization) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
@@ -80,7 +84,8 @@ api.interceptors.response.use(
       originalRequest &&
       !originalRequest._retry &&
       !isAuthRefreshPath(requestUrl) &&
-      !isAuthActionPath(requestUrl)
+      !isAuthActionPath(requestUrl) &&
+      !isAdminPath(requestUrl)
     ) {
       originalRequest._retry = true;
 

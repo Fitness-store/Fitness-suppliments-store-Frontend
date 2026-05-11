@@ -89,14 +89,14 @@ const ProductGrid = ({ products, loading, error, onRetry }) => {
                 Our Collection
               </span>
             </div>
-            <h2 className="section-heading text-5xl font-black leading-tight" style={{ color: 'var(--text-primary)' }}>
+            <h2 className="section-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-tight" style={{ color: 'var(--text-primary)' }}>
               Premium
               <br />
               <span className="text-gradient">Supplements</span>
             </h2>
           </div>
 
-          <div className="flex items-center gap-8 mb-1">
+          <div className="flex flex-wrap items-center gap-6 sm:gap-8 mb-1">
             {[
               { value: `${products.length}+`, label: 'Products' },
               { value: '50K+', label: 'Athletes' },

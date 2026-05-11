@@ -135,7 +135,7 @@ const BenefitsSection = () => {
             <span className="w-8 h-px" style={{ background: 'linear-gradient(90deg, #e4b94a, transparent)' }} />
           </div>
 
-          <h2 className="section-heading text-5xl sm:text-6xl font-black leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
+          <h2 className="section-heading text-3xl sm:text-5xl lg:text-6xl font-black leading-tight mb-6" style={{ color: 'var(--text-primary)' }}>
             The <span className="text-gradient">IronCore</span>
             <br />
             Advantage

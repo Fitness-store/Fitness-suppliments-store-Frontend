@@ -190,16 +190,16 @@ const ProductDetailsPage = () => {
 
             {/* Product Info */}
             <div>
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                 <div>
                   <p className="font-medium mb-1" style={{ color: 'var(--accent-gold)' }}>{product.brand}</p>
                   <h1 className="text-2xl lg:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>{product.name}</h1>
                 </div>
                 <div className="flex gap-2">
-                  <button className="p-2 rounded-lg transition-colors" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+                  <button className="p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                     <Heart className="w-6 h-6" />
                   </button>
-                  <button className="p-2 rounded-lg transition-colors" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+                  <button className="p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center" style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                     <Share2 className="w-6 h-6" />
                   </button>
                 </div>
@@ -224,7 +224,7 @@ const ProductDetailsPage = () => {
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-3 mb-6">
+              <div className="flex flex-wrap items-baseline gap-3 mb-6">
                 <span className="text-3xl font-bold text-gradient">
                   Rs {selectedVariant?.finalPrice?.toLocaleString()}
                 </span>
@@ -346,7 +346,7 @@ const ProductDetailsPage = () => {
 
               {/* Tabs */}
               <div className="mb-6" style={{ borderBottom: '1px solid var(--border)' }}>
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-4 sm:gap-6">
                   {['description', 'details'].map(tab => (
                     <button
                       key={tab}

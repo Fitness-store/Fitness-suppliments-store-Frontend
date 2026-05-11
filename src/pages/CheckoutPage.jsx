@@ -183,11 +183,11 @@ const CheckoutPage = () => {
   // --- Guards ---
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-base)]">
         <Navbar />
         <div className="pt-32 pb-12 px-4">
-          <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
-            <p className="text-gray-600 mb-4">Please login to checkout</p>
+          <div className="max-w-md mx-auto bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border)] shadow-sm text-center">
+            <p className="text-[var(--text-secondary)] mb-4">Please login to checkout</p>
             <button onClick={() => navigate('/login?redirect=%2Fcheckout')} className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">Login</button>
           </div>
         </div>
@@ -198,12 +198,12 @@ const CheckoutPage = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-[var(--bg-base)]">
         <Navbar />
         <div className="pt-32 pb-12 px-4">
-          <div className="max-w-md mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
-            <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">Your cart is empty</p>
+          <div className="max-w-md mx-auto bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border)] shadow-sm text-center">
+            <ShoppingBag className="w-12 h-12 text-[var(--text-muted)] mx-auto mb-4" />
+            <p className="text-[var(--text-secondary)] mb-4">Your cart is empty</p>
             <button onClick={() => navigate('/products')} className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">Browse Products</button>
           </div>
         </div>
@@ -218,30 +218,30 @@ const CheckoutPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--bg-base)]">
       <Navbar />
       <div className="pt-32 pb-12">
         <div className="max-w-5xl mx-auto px-4">
           {/* Back button */}
           <button
             onClick={() => step === 1 ? navigate('/cart') : setStep(1)}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+            className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             {step === 1 ? 'Back to Cart' : 'Back to Address'}
           </button>
 
           {/* Step indicator */}
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex flex-wrap items-center gap-3 mb-8">
             <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              step >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+              step >= 1 ? 'bg-primary-600 text-white' : 'bg-[var(--bg-subtle)] text-[var(--text-muted)]'
             }`}>
               {step > 1 ? <Check className="w-4 h-4" /> : <MapPin className="w-4 h-4" />}
               Address
             </div>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <ChevronRight className="w-4 h-4 text-[var(--text-muted)]" />
             <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              step >= 2 ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-500'
+              step >= 2 ? 'bg-primary-600 text-white' : 'bg-[var(--bg-subtle)] text-[var(--text-muted)]'
             }`}>
               <CreditCard className="w-4 h-4" />
               Payment
@@ -273,9 +273,9 @@ const CheckoutPage = () => {
               {/* ===== STEP 1: ADDRESS ===== */}
               {step === 1 && (
                 <form onSubmit={handleContinueToPayment}>
-                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                  <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                      <h2 className="text-lg font-semibold text-[var(--text-primary)] flex items-center gap-2">
                         <MapPin className="w-5 h-5 text-primary-600" />
                         Shipping Address
                       </h2>
@@ -295,36 +295,36 @@ const CheckoutPage = () => {
 
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Address *</label>
+                        <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Full Address *</label>
                         <textarea
                           name="shippingAddress" value={form.shippingAddress} onChange={handleChange} rows={3}
                           placeholder="House/Flat No., Street, Landmark"
-                          className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                          className="w-full px-4 py-3 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                           required
                         />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">City *</label>
                           <input type="text" name="city" value={form.city} onChange={handleChange} placeholder="Mumbai"
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
+                            className="w-full px-4 py-3 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">State *</label>
                           <input type="text" name="state" value={form.state} onChange={handleChange} placeholder="Maharashtra"
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
+                            className="w-full px-4 py-3 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Pincode *</label>
+                          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Pincode *</label>
                           <input type="text" name="pincode" value={form.pincode} onChange={handleChange} placeholder="400001" maxLength={6}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
+                            className="w-full px-4 py-3 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Phone *</label>
                           <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="9876543210" maxLength={10}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
+                            className="w-full px-4 py-3 border border-[var(--border)] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" required />
                         </div>
                       </div>
                     </div>
@@ -341,9 +341,9 @@ const CheckoutPage = () => {
               {step === 2 && (
                 <div className="space-y-6">
                   {/* Address summary (readonly) */}
-                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+                  <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] shadow-sm p-5">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                      <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
                         <Check className="w-4 h-4 text-green-600" />
                         Delivering to
                       </h3>
@@ -351,15 +351,15 @@ const CheckoutPage = () => {
                         Change
                       </button>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-[var(--text-secondary)] mt-2">
                       {form.shippingAddress}, {form.city}, {form.state} — {form.pincode}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">📞 {form.phone}</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-1">📞 {form.phone}</p>
                   </div>
 
                   {/* Payment method */}
-                  <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
                       <CreditCard className="w-5 h-5 text-primary-600" />
                       Choose Payment Method
                     </h2>
@@ -371,17 +371,17 @@ const CheckoutPage = () => {
                             className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-all ${
                               form.paymentMethod === method.value
                                 ? 'border-primary-500 bg-primary-50 shadow-sm'
-                                : 'border-gray-200 hover:border-gray-300'
+                                : 'border-[var(--border)] hover:border-[var(--border-hover)]'
                             }`}>
                             <input type="radio" name="paymentMethod" value={method.value}
                               checked={form.paymentMethod === method.value} onChange={handleChange}
                               className="w-4 h-4 text-primary-600" />
-                            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                              <Icon className="w-5 h-5 text-gray-600" />
+                            <div className="w-10 h-10 rounded-lg bg-[var(--bg-subtle)] flex items-center justify-center flex-shrink-0">
+                              <Icon className="w-5 h-5 text-[var(--text-secondary)]" />
                             </div>
                             <div>
-                              <p className="font-medium text-gray-900">{method.label}</p>
-                              <p className="text-xs text-gray-500">{method.desc}</p>
+                              <p className="font-medium text-[var(--text-primary)]">{method.label}</p>
+                              <p className="text-xs text-[var(--text-muted)]">{method.desc}</p>
                             </div>
                           </label>
                         );
@@ -414,55 +414,55 @@ const CheckoutPage = () => {
 
             {/* Right column: Order Summary (visible on both steps) */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-36">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] shadow-sm p-6 lg:sticky lg:top-36">
+                <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
                   <ShoppingBag className="w-5 h-5 text-primary-600" />
                   Order Summary
                 </h2>
                 <div className="space-y-3 mb-4 max-h-56 overflow-y-auto">
                   {cartItems.map((item) => (
-                    <div key={item.variantId} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
-                      <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <div key={item.variantId} className="flex items-center gap-3 py-2 border-b border-[var(--border)] last:border-0">
+                      <div className="w-12 h-12 bg-[var(--bg-subtle)] rounded-lg overflow-hidden flex-shrink-0">
                         {item.imageUrl ? (
                           <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">IMG</div>
+                          <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)] text-xs">IMG</div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm font-medium text-[var(--text-primary)] truncate">{item.name}</p>
+                        <p className="text-xs text-[var(--text-muted)]">
                           {item.flavor && `${item.flavor}`}{item.netQuantity && ` • ${item.netQuantity}`} × {item.quantity}
                         </p>
                       </div>
-                      <p className="text-sm font-semibold text-gray-900 whitespace-nowrap">
+                      <p className="text-sm font-semibold text-[var(--text-primary)] whitespace-nowrap">
                         ₹{((item.finalPrice || 0) * item.quantity).toLocaleString('en-IN')}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="border-t border-gray-200 pt-4 space-y-2">
+                <div className="border-t border-[var(--border)] pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="text-gray-900">₹{subtotal.toLocaleString('en-IN')}</span>
+                    <span className="text-[var(--text-secondary)]">Subtotal</span>
+                    <span className="text-[var(--text-primary)]">₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
+                    <span className="text-[var(--text-secondary)]">Shipping</span>
                     <span className="text-green-600 font-medium">Free</span>
                   </div>
                   {form.paymentMethod === 'COD' && codCharge > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">COD Charge (3%)</span>
+                      <span className="text-[var(--text-secondary)]">COD Charge (3%)</span>
                       <span className="text-amber-600 font-medium">+₹{codCharge.toLocaleString('en-IN')}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3 mt-3">
-                    <span className="text-gray-900">Total</span>
-                    <span className="text-gray-900">₹{total.toLocaleString('en-IN')}</span>
+                  <div className="flex justify-between text-lg font-bold border-t border-[var(--border)] pt-3 mt-3">
+                    <span className="text-[var(--text-primary)]">Total</span>
+                    <span className="text-[var(--text-primary)]">₹{total.toLocaleString('en-IN')}</span>
                   </div>
                   {form.paymentMethod === 'COD' && codCharge > 0 && (
-                    <p className="text-xs text-gray-500 text-right">Save ₹{codCharge.toLocaleString('en-IN')} by paying online</p>
+                    <p className="text-xs text-[var(--text-muted)] text-right">Save ₹{codCharge.toLocaleString('en-IN')} by paying online</p>
                   )}
                 </div>
               </div>
